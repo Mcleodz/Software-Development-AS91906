@@ -27,9 +27,26 @@ function stopTimer(){
     let assignment = document.getElementById('assignment').value;
     let subject = document.getElementById('subject').value;
     let length = (count/100).toFixed(0);
+    let seconds = convertSeconds(length);
     
+    // Data Validation:
+    if (name == ''){
+      alert("Please name this time entry");
+    }
+    if (subject == ''){
+      alert("Please set a subject for this time entry");
+    }
+    if (assignment == ''){
+      alert("Please set an assignment for this time entry");
+    }
+
+    // Saving entry data to database
     saveEntry(name, subject, assignment, length);
-    displayEntry(name, subject, assignment, convertSeconds(length));
+
+    // Display new entry on timer dashboard
+    displayEntry(name, subject, assignment, seconds);
+
+    // Reset timer
     clearInterval(timer);
 
     count = 0;
@@ -44,6 +61,7 @@ function stopTimer(){
 };
 
 function convertSeconds(seconds){
+  // Converts seconds to hours and minutes to display to user.
   var hours = Math.floor(seconds / 3600);
   var minutes = Math.floor(seconds % 3600 / 60);
 
@@ -60,19 +78,15 @@ function convertSeconds(seconds){
   return `${hours_display}:${minutes_display}:${seconds_display}`
 }
 
-function saveEntry(name, subject, assignment, length){
-  const entriesObj = window.localStorage;
-
-  const entryData = {
-    'subject' : subject,
-    'assignment' : assignment,
-    'length' : length
-    }
-  entriesObj.setItem(name, JSON.stringify(entryData));
-  return 200
+function saveEntry(name, subject, assignment, length=0){
+  //Sends entry data to server to save to database
+  fetch(`http://localhost:2000/post/entries/${name}/${subject}/${assignment}/${length}`)
+    .then((response) => (response.json()))
+    .then((json) => console.log(json));
 }
 
 function displayEntry(name, subject, assignment, length){
+  // Displays new entry data on timer dashboard
   const entryDiv = document.getElementById('entry-display');
   const newEntry = document.createElement('p');
   const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Length: ${length}`;

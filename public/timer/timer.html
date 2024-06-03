@@ -15,6 +15,7 @@
         </h1>
         <a href="/timer" class="sidenav-option" ><span class="material-symbols-outlined">timer</span> Timer</a>
         <a href="/dashboard" class="sidenav-option" ><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="/tags" class="sidenav-option" ><span class="material-symbols-outlined">sell</span> Tags Manager</a>
     </div>
 
     <div class="header-master" id="header-master">
@@ -24,12 +25,12 @@
     </div>
 
     <div class="timer-bar-master" id="timer-master">
-        <input class="timer" id="timer" placeholder="What are you working on?"></input>
-        <input class="timer-bar-slave" id="subject" placeholder="Subject?"></input>
-        <input class="timer-bar-slave" id="assignment" placeholder="Standard?"></input>
-        <button class="timer-bar-button" id="custom-tag"><span class="material-symbols-outlined">sell</span></button>
-        <button class="timer-bar-button" id="play" onclick="startTimer()"><span class="material-symbols-outlined">play_arrow</span></button>
-        <button class="timer-bar-button" id="stop" onclick="stopTimer()"><span class="material-symbols-outlined">stop</span></button>
+        <input class="timer" id="timer" placeholder="What are you working on?" tabindex="0"></input>
+        <input class="timer-bar-slave" id="subject" placeholder="Subject?" tabindex="0"></input>
+        <input class="timer-bar-slave" id="assignment" placeholder="Standard?" tabindex="0"></input>
+        <button class="timer-bar-button" id="custom-tag" tabindex="0"><span class="material-symbols-outlined">sell</span></button>
+        <button class="timer-bar-button" id="play" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
+        <button class="timer-bar-button" id="stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>
         <button class="timer-bar-out" id="out" disabled="true">00:00:00</button>
     </div>
     
