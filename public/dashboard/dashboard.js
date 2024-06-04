@@ -1,6 +1,6 @@
 window.onload = function() {
     let dashboardMaster = document.getElementById('dashboard-master');
-    const COLOURDICT = {
+    const colourDict = {
         "0" : "#8A3324",
         "1" : "#D5A021",
         "2" : "#d15d24",
@@ -24,20 +24,16 @@ window.onload = function() {
                 let newSubjectCard = document.createElement('div');
                 newSubjectCard.id = subject;
                 newSubjectCard.className = 'dashboard-slave';
-                newSubjectCard.style.backgroundColor = COLOURDICT[i];
+                newSubjectCard.style.backgroundColor = colourDict[i];
 
                 let newSubjectCardName = document.createElement('p');
                 newSubjectCardName.innerText = subject;
+                newSubjectCardName.className = 'dashboard-slave-title-text';
 
                 let newSubjectCardTotal = document.createElement('h3');
                 newSubjectCardTotal.style.fontWeight = 800;
-                if (totalDuration < 2){
-                    newSubjectCardTotal.innerText = totalDuration + "hr";
-                }
-
-                else{
-                    newSubjectCardTotal.innerText = totalDuration + "hrs"
-                }
+                newSubjectCardTotal.className = 'dashboard-slave-total-text';
+                newSubjectCardTotal.innerText = totalDuration;
 
                 dashboardMaster.appendChild(newSubjectCard);
                 newSubjectCard.appendChild(newSubjectCardName);
@@ -47,14 +43,16 @@ window.onload = function() {
             let totalCard = document.createElement('div');
             totalCard.id = "total";
             totalCard.className = 'dashboard-slave';
-            totalCard.style.backgroundColor = COLOURDICT.total;
+            totalCard.style.backgroundColor = colourDict.total;
             totalCard.style.color = "#4B4237";
 
             let totalCardName = document.createElement('p');
             totalCardName.innerText = "Total";
+            totalCardName.className = 'dashboard-slave-title-text';
 
             let totalCardTotal = document.createElement('h3');
-            totalCardTotal.innerText = getTotalTime(data) + "hrs";
+            totalCardTotal.innerText = getTotalTime(data);
+            totalCardTotal.className = 'dashboard-slave-total-text';
             totalCardTotal.style.fontWeight = 800;
 
             dashboardMaster.appendChild(totalCard);
@@ -63,12 +61,45 @@ window.onload = function() {
         })
 }
 
-function convertSecondsToHours(seconds){
-    // Converts seconds to hours and minutes to display to user.
-    var hours = Math.floor(seconds / 3600);
+
+function convertSeconds(duration){
+    // Variable declarations
+    let hours = Math.floor(duration / 3600);
+    let minutes = Math.floor(duration % 3600 / 60);
+    let seconds = duration-(minutes*60)-(hours*3600);
+    let hours_display = 0;
+    let minutes_display = 0;
+    let seconds_display = 0;
+    let output = "";
+    
+    // Convert times into string for formatting
+    hours_display = hours.toString();
+    minutes_display = minutes.toString();
+    seconds_display = (duration-(minutes*60)-(hours*3600)).toString();
+
+    // Check if total time will look ugly with mins and secs
+    if (hours > 100){
+        output = hours_display + "hrs "
+    }
+    // Check if total time is not 0
+    else if (output == seconds){
+        output = "0secs";
+    }
+    // Reformat total time if above conditions are not met
+    else {
+        if (hours > 0){
+            output += (hours_display + "hrs ")
+        }
+        if (minutes > 0){
+            output += (minutes_display + "mins ")
+        }
+        if (seconds > 0){
+            output += (seconds_display + "secs ")
+        }
+    }
+    return output;
+  }
   
-    return hours
-}
 
 function getSubjects(entryObj){
     // Gets list of all subjects
@@ -102,7 +133,7 @@ function getAssignmentTime(entryObj, assignment){
             assignmentTotal += entryObj[i].duration;
         }
     }
-    return convertSecondsToHours(assignmentTotal);
+    return convertSeconds(assignmentTotal);
 }
 
 function getSubjectTime(entryObj, subject){
@@ -113,7 +144,7 @@ function getSubjectTime(entryObj, subject){
             subjectTotal += entryObj[i].duration;
         }
     }
-    return convertSecondsToHours(subjectTotal);
+    return convertSeconds(subjectTotal);
 }
 
 function getTotalTime(entryObj){
@@ -122,5 +153,5 @@ function getTotalTime(entryObj){
     for (let i=0; i < entryObj.length; i++){
         total += entryObj[i].duration;
     }
-    return convertSecondsToHours(total);
+    return convertSeconds(total);
 }

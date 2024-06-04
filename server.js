@@ -8,7 +8,6 @@ app.get('/post/entries/:name/:subject/:assignment/:length', (req, res) =>{
   let name = req.params.name;
   let subject = req.params.subject;
   let assignment = req.params.assignment;
-  let tags = req.params.tags;
   let length = req.params.length;
 
   // Formats entry data into json
@@ -22,12 +21,12 @@ app.get('/post/entries/:name/:subject/:assignment/:length', (req, res) =>{
   const fs = require('fs');
 
   // writes entry data to entries.json db
-  let entryObj = fs.readFileSync(__dirname + "/data-storage/entries.json", 'utf-8');
+  let entryObj = fs.readFileSync(__dirname + "/public/data-storage/entries.json", 'utf-8');
   let entries = JSON.parse(entryObj);
   const arr = Array.from(entries);
   arr.push(entryData);
   entryObj = JSON.stringify(arr, null, 4);
-  fs.writeFileSync(__dirname + "/data-storage/entries.json", entryObj,'utf-8')
+  fs.writeFileSync(__dirname + "/public/data-storage/entries.json", entryObj,'utf-8')
 
   res.sendStatus(200);
 })
@@ -35,7 +34,7 @@ app.get('/post/entries/:name/:subject/:assignment/:length', (req, res) =>{
 app.get('/get/entries/list', (req, res) => {
   const fs = require('fs');
 
-  let entriesObj = fs.readFileSync(__dirname + "/data-storage/entries.json", 'utf-8');
+  let entriesObj = fs.readFileSync(__dirname + "/public/data-storage/entries.json", 'utf-8');
   let entriesList = JSON.parse(entriesObj);
 
   res.send(entriesList)
@@ -43,29 +42,29 @@ app.get('/get/entries/list', (req, res) => {
 
 // Timer files
 app.get('/timer', (req, res) =>{
-  res.sendFile(__dirname + "/timer/timer.html");
+  res.sendFile(__dirname + "/public/timer/timer.html");
 })
 
 app.get('/timer/script', (req, res) =>{
-  res.sendFile(__dirname + '/timer/timer.js');
+  res.sendFile(__dirname + '/public/timer/timer.js');
 })
 
 // Dashboard files
 app.get('/dashboard', (req, res) =>{
-  res.sendFile(__dirname + "/dashboard/dashboard.html");
+  res.sendFile(__dirname + "/public/dashboard/dashboard.html");
 })
 
 app.get('/dashboard/script', (req, res) =>{
-  res.sendFile(__dirname + "/dashboard/dashboard.js");
+  res.sendFile(__dirname + "/public/dashboard/dashboard.js");
 })
 
 // Styling files
 app.get('/font', (req, res) =>{
-  res.sendFile(__dirname + "/Montserrat/Montserrat-VariableFont_wght.ttf");
+  res.sendFile(__dirname + "/public/Montserrat/Montserrat-VariableFont_wght.ttf");
 })
 
 app.get('/styles', (req, res) =>{
-  res.sendFile(__dirname + "/styles.css");
+  res.sendFile(__dirname + "/public/styles.css");
 })
 
 // Starting server

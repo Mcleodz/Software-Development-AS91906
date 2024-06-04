@@ -1,6 +1,7 @@
 window.onload = function() {
   output = document.getElementById('out');
   playpause = document.getElementById('play');
+
   timer;
   count = 0;
 }
@@ -13,51 +14,54 @@ function startTimer(){
         playpause.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
         return;
     }
-    timer = setInterval(function(){
+    playpause.innerHTML = '<span class="material-symbols-outlined">pause</span>';
+    timer = window.setInterval(function(){
         count++;
-        seconds = (count/100).toFixed(0);
-
+        seconds = count.toFixed(0);
+        document.title = `Verso - Timer (${convertSeconds(seconds)})`
         output.innerHTML = convertSeconds(seconds);
-        playpause.innerHTML = '<span class="material-symbols-outlined">pause</span>';
-    }, 10);
+    }, 1000);
 };
+
 
 function stopTimer(){
     let name = document.getElementById('timer').value;
     let assignment = document.getElementById('assignment').value;
     let subject = document.getElementById('subject').value;
-    let length = (count/100).toFixed(0);
+    let length = (count).toFixed(0);
     let seconds = convertSeconds(length);
     
     // Data Validation:
     if (name == ''){
       alert("Please name this time entry");
     }
-    if (subject == ''){
+    else if (subject == ''){
       alert("Please set a subject for this time entry");
     }
-    if (assignment == ''){
+    else if (assignment == ''){
       alert("Please set an assignment for this time entry");
     }
 
-    // Saving entry data to database
-    saveEntry(name, subject, assignment, length);
+    else{
+      // Saving entry data to database
+      saveEntry(name, subject, assignment, length);
 
-    // Display new entry on timer dashboard
-    displayEntry(name, subject, assignment, seconds);
+      // Display new entry on timer dashboard
+      displayEntry(name, subject, assignment, seconds);
 
-    // Reset timer
-    clearInterval(timer);
+      // Reset timer
+      clearInterval(timer);
 
-    count = 0;
-    output.innerHTML = "00:00:00";
-    timer = null;
-    playpause.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
+      count = 0;
+      output.innerHTML = "00:00:00";
+      timer = null;
+      playpause.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
 
-    document.getElementById('timer').value = '';
-    document.getElementById('assignment').value = '';
-    document.getElementById('subject').value = '';
-    return;
+      document.getElementById('timer').value = '';
+      document.getElementById('assignment').value = '';
+      document.getElementById('subject').value = '';
+      return;
+    }
 };
 
 function convertSeconds(seconds){
