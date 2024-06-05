@@ -18,7 +18,7 @@ function startTimer(){
     timer = window.setInterval(function(){
         count++;
         seconds = count.toFixed(0);
-        document.title = `Verso - Timer (${convertSeconds(seconds)})`
+        document.title = `Verso - Timer (${convertSeconds(seconds)})`;
         output.innerHTML = convertSeconds(seconds);
     }, 1000);
 };
@@ -30,6 +30,8 @@ function stopTimer(){
     let subject = document.getElementById('subject').value;
     let length = (count).toFixed(0);
     let seconds = convertSeconds(length);
+
+    document.title = 'Verso - Timer';
     
     // Data Validation:
     if (name == ''){
