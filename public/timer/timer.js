@@ -18,7 +18,7 @@ function startTimer(){
     timer = window.setInterval(function(){
         count++;
         seconds = count.toFixed(0);
-        document.title = `Verso - Timer (${convertSeconds(seconds)})`
+        document.title = `Verso - Timer (${convertSeconds(seconds)})`;
         output.innerHTML = convertSeconds(seconds);
     }, 1000);
 };
@@ -26,10 +26,14 @@ function startTimer(){
 
 function stopTimer(){
     let name = document.getElementById('timer').value;
-    let assignment = document.getElementById('assignment').value;
     let subject = document.getElementById('subject').value;
+    let assignment = document.getElementById('assignment').value;
+    let tag = document.getElementById('tag').value;
     let length = (count).toFixed(0);
+
     let seconds = convertSeconds(length);
+
+    document.title = 'Verso - Timer';
     
     // Data Validation:
     if (name == ''){
@@ -44,10 +48,10 @@ function stopTimer(){
 
     else{
       // Saving entry data to database
-      saveEntry(name, subject, assignment, length);
+      saveEntry(name, subject, assignment, tag, length);
 
       // Display new entry on timer dashboard
-      displayEntry(name, subject, assignment, seconds);
+      displayEntry(name, subject, assignment, tag, seconds);
 
       // Reset timer
       clearInterval(timer);
@@ -60,6 +64,7 @@ function stopTimer(){
       document.getElementById('timer').value = '';
       document.getElementById('assignment').value = '';
       document.getElementById('subject').value = '';
+      document.getElementById('tag').value = '';
       return;
     }
 };
@@ -82,18 +87,18 @@ function convertSeconds(seconds){
   return `${hours_display}:${minutes_display}:${seconds_display}`
 }
 
-function saveEntry(name, subject, assignment, length=0){
+function saveEntry(name, subject, assignment, tag, length=0){
   //Sends entry data to server to save to database
-  fetch(`http://localhost:2000/post/entries/${name}/${subject}/${assignment}/${length}`)
+  fetch(`http://localhost:2000/post/entries/${name}/${subject}/${assignment}/${tag}/${length}`)
     .then((response) => (response.json()))
     .then((json) => console.log(json));
 }
 
-function displayEntry(name, subject, assignment, length){
+function displayEntry(name, subject, assignment, tag, length){
   // Displays new entry data on timer dashboard
   const entryDiv = document.getElementById('entry-display');
   const newEntry = document.createElement('p');
-  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Length: ${length}`;
+  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Tags: ${tag} </br> Length: ${length}`;
   newEntry.innerHTML = entryText;
   newEntry.className = 'entry-display-slave';
   newEntry.id = name;

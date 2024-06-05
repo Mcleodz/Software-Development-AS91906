@@ -125,6 +125,18 @@ function getAssignments(entryObj){
     return assignmentList
 }
 
+function getTags(entryObj){
+    // Gets list of all assignments
+    let tagsList = []
+    for (let i=0; i < entryObj.length; i++){
+        let currentTag = entryObj[i].tag;
+        if (tagsList.includes(currentTag) == false){
+            tagsList.push(currentTag);
+        }
+    }
+    return tagsList
+}
+
 function getAssignmentTime(entryObj, assignment){
     // Gets total time for specified assignment
     let assignmentTotal = 0;
@@ -145,6 +157,17 @@ function getSubjectTime(entryObj, subject){
         }
     }
     return convertSeconds(subjectTotal);
+}
+
+function getTagTime(entryObj, tag){
+    // Gets total time for specified subject
+    let tagTotal = 0;
+    for (let i=0; i < entryObj.length; i++){
+        if (entryObj[i].tag == tag){
+            tagTotal += entryObj[i].duration;
+        }
+    }
+    return convertSeconds(tagTotal);
 }
 
 function getTotalTime(entryObj){
