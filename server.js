@@ -3,18 +3,20 @@ const app = express();
 const port = 2000;
 
 //Database files
-app.get('/post/entries/:name/:subject/:assignment/:length', (req, res) =>{
+app.get('/post/entries/:name/:subject/:assignment/:tags/:length', (req, res) =>{
   // Gets entry data information
-  let name = req.params.name;
-  let subject = req.params.subject;
-  let assignment = req.params.assignment;
-  let length = req.params.length;
+  const name = req.params.name;
+  const subject = req.params.subject;
+  const assignment = req.params.assignment;
+  const tag = req.params.tags;
+  const length = req.params.length;
 
   // Formats entry data into json
-  let entryData = {
+  const entryData = {
     "name" : name,
     "subject" : subject,
     "assignment" : assignment,
+    "tag" : tag,
     "duration" : Number(length)
   }
 
