@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const port = 2000;
 
+app.get('/', (req, res) =>{
+  res.redirect('/timer')
+})
+
 //Database files
 app.get('/post/entries/:name/:subject/:assignment/:tags/:length', (req, res) =>{
   // Gets entry data information
@@ -71,5 +75,5 @@ app.get('/styles', (req, res) =>{
 
 // Starting server
 app.listen(port, () => {
-  console.log(`test server listening on ${port}`);
+  console.log(`server active on 'http://localhost:${port}'`);
 })
