@@ -1,7 +1,11 @@
-window.onload = function (){
-    //generateSubjectDashboard();
-    generateAssignmentDashboard('PHYS 101');
-    //generateTagDashboard();
+window.onload = function(){
+    generateSubjectDashboard()
+}
+
+function toggleDiv(id) {
+    var div = document.getElementById(id);
+    div.style.display = div.style.display == "none" ? "block" : "none";
+
 }
 
 function convertSeconds(duration){
@@ -123,7 +127,12 @@ function getTotalTime(entryObj){
 }
 
 function generateSubjectDashboard(){
+    clearDashboard()
+
+    document.title = 'Verso - Subject Dashboard';
+
     let dashboardMaster = document.getElementById('dashboard-master');
+
     const colourDict = {
         "0" : "#8A3324",
         "1" : "#D5A021",
@@ -183,10 +192,24 @@ function generateSubjectDashboard(){
             totalCard.appendChild(totalCardName);
             totalCard.appendChild(totalCardTotal);
         })
+    toggleDiv('filter-master');
 }
 
-function generateAssignmentDashboard(subject){
+function generateAssignmentDashboard(){
+
+    let subject = document.getElementById('filter-assignment').value;
+
+    if (subject == ''){
+        alert('please select a subject to view');
+        return `404 ${subject} not found`;
+    }
+
+    clearDashboard()
+
     let dashboardMaster = document.getElementById('dashboard-master');
+    document.getElementById('filter-assignment').value = '';
+
+    document.title = `Verso - Assignment Dashboard for ${subject}` ;
 
     const colourDict = {
         "0" : "#8A3324",
@@ -206,7 +229,7 @@ function generateAssignmentDashboard(subject){
             for (let i = 0; i < assignments.length; i++){
                 // Generates cards to display each subject and respective time
                 const assignment = assignments[i];
-                const totalDuration = getAssignmentTime(data, assignments[i])
+                const totalDuration = getAssignmentTime(data, assignment)
                 console.log(assignments[i], totalDuration);
 
                 let newAssignmentCard = document.createElement('div');
@@ -247,9 +270,14 @@ function generateAssignmentDashboard(subject){
             totalCard.appendChild(totalCardName);
             totalCard.appendChild(totalCardTotal);
         })
+    toggleDiv('filter-master');
 }
 
 function generateTagDashboard(){
+    clearDashboard()
+
+    document.title = 'Verso - Tag Dashboard';
+
     let dashboardMaster = document.getElementById('dashboard-master');
 
     const colourDict = {
@@ -311,4 +339,40 @@ function generateTagDashboard(){
             totalCard.appendChild(totalCardName);
             totalCard.appendChild(totalCardTotal);
         })
+    toggleDiv('filter-master');
+}
+
+function clearDashboard() {
+
+    let body = document.body
+
+    let oldDashboardMaster = document.getElementById('dashboard-master');
+    oldDashboardMaster.remove();
+
+    let oldGraphMaster = document.getElementById('graph-master');
+    oldGraphMaster.remove();
+
+    let newDashboardMaster = document.createElement('div');
+    newDashboardMaster.id = 'dashboard-master';
+    newDashboardMaster.className = 'dashboard-master';
+    
+    let newgraphMaster = document.createElement('div');
+    newgraphMaster.id = 'graph-master';
+    newgraphMaster.className = 'graph-master';
+
+    let newgraphLeft = document.createElement('div');
+    newgraphLeft.id = 'graph-led';
+    newgraphLeft.className = 'graph-slave';
+    
+    let newgraphRight = document.createElement('div');
+    newgraphRight.id = 'graph-right';
+    newgraphRight.className = 'graph-slave';
+
+    body.appendChild(newDashboardMaster);
+    body.appendChild(newgraphMaster);
+
+    newgraphMaster.appendChild(newgraphLeft);
+    newgraphMaster.appendChild(newgraphRight);
+
+    return 200
 }

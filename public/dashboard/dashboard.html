@@ -2,7 +2,7 @@
 <head>
     <link rel="stylesheet" href="/styles"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
-    <script src="/dashboard/script" type="module"></script>
+    <script src="/dashboard/script"></script>
     <title>
         Verso - Dashboard
     </title>
@@ -21,9 +21,16 @@
         <h1 class="header-slave">
             Dashboard
         </h1>
-        <button class="filter-button" id="filter-button">
+        <button class="filter-button" id="filter-button" onclick="toggleDiv('filter-master')">
             <span class="material-symbols-outlined">tune</span>
         </button>
+    </div>
+
+    <div class="filter-master" id="filter-master">
+        <button class="filter-slave" id="filter-subject" onclick="generateSubjectDashboard()">Subject Dashboard</button>
+        <input class="filter-slave" id="filter-assignment" placeholder="Subject's assignment" style="border:none">
+        <button class="filter-slave" id="filter-assignment-confirm" onclick="generateAssignmentDashboard('COMP 102')">Selected Subject Dashboard</button>
+        <button class="filter-slave" id="filter-tag" onclick="generateTagDashboard()">Tag Dashboard</button>
     </div>
 
     <div class="dashboard-master" id="dashboard-master">

@@ -1,2 +1,30 @@
 [
+    {
+        "name": "Testing verso",
+        "subject": "COMP 102",
+        "assignment": "Test 1",
+        "tag": "Lab",
+        "duration": 540000
+    },
+    {
+        "name": "Testing verso",
+        "subject": "AIML 101",
+        "assignment": "Test 2",
+        "tag": "Lecture",
+        "duration": 540000
+    },
+    {
+        "name": "Testing verso",
+        "subject": "PHYS 101",
+        "assignment": "Test 3",
+        "tag": "Tutorial",
+        "duration": 540000
+    },
+    {
+        "name": "Testing verso",
+        "subject": "MATH 161",
+        "assignment": "Test 4",
+        "tag": "Self Directed Study",
+        "duration": 540000
+    }
 ]
