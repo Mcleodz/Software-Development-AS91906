@@ -4,6 +4,9 @@ window.onload = function() {
 
   timer;
   count = 0;
+
+  getSubjectOptions()
+  getTagOptions()
 }
 
 function startTimer(){
@@ -22,7 +25,6 @@ function startTimer(){
         output.innerHTML = convertSeconds(seconds);
     }, 1000);
 };
-
 
 function stopTimer(){
     let name = document.getElementById('timer').value;
@@ -105,4 +107,138 @@ function displayEntry(name, subject, assignment, tag, length){
 
   entryDiv.appendChild(newEntry);
   return 200
+}
+
+function getSubjectOptions(){
+  const subjectSelector = document.getElementById('subject');
+  const response = fetch("http://localhost:2000/get/entries/list")
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let subjects = getSubjects(data)
+            for (let i = 0; i < subjects.length; i++){
+                // Generates cards to display each subject and respective time
+                const subject = subjects[i];
+
+                let newSubjectOption = document.createElement('option');
+                newSubjectOption.innerText = subject;
+                subjectSelector.appendChild(newSubjectOption);
+            }
+            let createSubjectOption = document.createElement('option');
+            createSubjectOption.innerText = "New Subject";
+            createSubjectOption.id = 'new-option';
+            createSubjectOption.value = 'new';
+            subjectSelector.appendChild(createSubjectOption);
+        })
+}
+
+function getAssignmentOptions(){
+  const assignmentSelector = document.getElementById('assignment');
+  resetAssignmentOptions();
+
+  let subject = document.getElementById('subject').value;
+  const response = fetch("http://localhost:2000/get/entries/list")
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let assignments = getAssignments(data, subject)
+            for (let i = 0; i < assignments.length; i++){
+                // Generates cards to display each subject and respective time
+                const assignment = assignments[i];
+
+                let newAssignmentOption = document.createElement('option');
+                newAssignmentOption.innerText = assignment;
+                newAssignmentOption.className = "generated-option";
+                assignmentSelector.appendChild(newAssignmentOption);
+
+            }
+            let createAssignmentOption = document.createElement('option');
+            createAssignmentOption.innerText = "New Assignment";
+            createAssignmentOption.id = 'new-option';
+            createAssignmentOption.value = 'new';
+            assignmentSelector.appendChild(createAssignmentOption);
+        })
+}
+
+function resetAssignmentOptions(){
+  let options = document.getElementsByClassName('generated-option');
+  for (i=0; i<options.length; i++){
+    options[i].remove();
+  }
+}
+
+function getTagOptions(){
+  const tagSelector = document.getElementById('tag');
+  const response = fetch("http://localhost:2000/get/entries/list")
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            let tags = getTags(data)
+            for (let i = 0; i < tags.length; i++){
+                // Generates cards to display each subject and respective time
+                const tag = tags[i];
+
+                let newTagOption = document.createElement('option');
+                newTagOption.innerText = tag;
+                tagSelector.appendChild(newTagOption);
+
+            }
+            let createTagOption = document.createElement('option');
+            createTagOption.innerText = "New Tag";
+            createTagOption.id = 'new-option';
+            createTagOption.value = 'new';
+            tagSelector.appendChild(createTagOption);
+        })
+}
+
+function getSubjects(entryObj){
+  // Gets list of all subjects
+  let subjectList = []
+  for (let i=0; i < entryObj.length; i++){
+      let currentSubject = entryObj[i].subject;
+      if (subjectList.includes(currentSubject) == false){
+          subjectList.push(currentSubject);
+      }
+  }
+  return subjectList
+}
+
+function getAssignments(entryObj, subject){
+  // Gets list of all assignments
+  let assignmentList = []
+  for (let i=0; i < entryObj.length; i++){
+      if (entryObj[i].subject == subject){
+          let currentAssignment = entryObj[i].assignment;
+          if (assignmentList.includes(currentAssignment) == false){
+              assignmentList.push(currentAssignment);
+          }
+      }
+  }
+  return assignmentList
+}
+
+function getTags(entryObj){
+  // Gets list of all assignments
+  let tagsList = []
+  for (let i=0; i < entryObj.length; i++){
+      let currentTag = entryObj[i].tag;
+      if (tagsList.includes(currentTag) == false){
+          tagsList.push(currentTag);
+      }
+  }
+  return tagsList
+}
+
+function createNewOption(selectorId){
+  let selector = document.getElementById(selectorId);
+
+  if (selector.value == 'new'){
+    selector.remove();
+    document.getElementById(`${selectorId}-input`).style.display = 'block';
+    document.getElementById(`${selectorId}-input`).className = 'timer-new-option';
+    document.getElementById(`${selectorId}-input`).id = selectorId
+  }
 }

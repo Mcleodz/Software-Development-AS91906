@@ -3,7 +3,7 @@ window.onload = function(){
 }
 
 function toggleDiv(id) {
-    var div = document.getElementById(id);
+    let div = document.getElementById(id);
     div.style.display = div.style.display == "none" ? "block" : "none";
 
 }
@@ -343,7 +343,6 @@ function generateTagDashboard(){
 }
 
 function clearDashboard() {
-
     let body = document.body
 
     let oldDashboardMaster = document.getElementById('dashboard-master');
