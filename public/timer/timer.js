@@ -64,9 +64,9 @@ function stopTimer(){
       playpause.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
 
       document.getElementById('timer').value = '';
-      document.getElementById('assignment').value = '';
-      document.getElementById('subject').value = '';
-      document.getElementById('tag').value = '';
+      document.getElementById('assignment').value = 'Standard';
+      document.getElementById('subject').value = 'Subject';
+      document.getElementById('tag').value = 'Tag';
       return;
     }
 };
@@ -126,7 +126,7 @@ function getSubjectOptions(){
                 subjectSelector.appendChild(newSubjectOption);
             }
             let createSubjectOption = document.createElement('option');
-            createSubjectOption.innerText = "New Subject";
+            createSubjectOption.innerText = '+';
             createSubjectOption.id = 'new-option';
             createSubjectOption.value = 'new';
             subjectSelector.appendChild(createSubjectOption);
@@ -135,7 +135,7 @@ function getSubjectOptions(){
 
 function getAssignmentOptions(){
   const assignmentSelector = document.getElementById('assignment');
-  resetAssignmentOptions();
+  clearOptions();
 
   let subject = document.getElementById('subject').value;
   const response = fetch("http://localhost:2000/get/entries/list")
@@ -155,18 +155,19 @@ function getAssignmentOptions(){
 
             }
             let createAssignmentOption = document.createElement('option');
-            createAssignmentOption.innerText = "New Assignment";
+            createAssignmentOption.innerText = "+";
             createAssignmentOption.id = 'new-option';
             createAssignmentOption.value = 'new';
             assignmentSelector.appendChild(createAssignmentOption);
         })
 }
 
-function resetAssignmentOptions(){
+function clearOptions() {
   let options = document.getElementsByClassName('generated-option');
-  for (i=0; i<options.length; i++){
-    options[i].remove();
+  while (options.length > 0){
+      options[0].remove();
   }
+  document.getElementById('new-option').remove();
 }
 
 function getTagOptions(){
@@ -187,7 +188,7 @@ function getTagOptions(){
 
             }
             let createTagOption = document.createElement('option');
-            createTagOption.innerText = "New Tag";
+            createTagOption.innerText = "+";
             createTagOption.id = 'new-option';
             createTagOption.value = 'new';
             tagSelector.appendChild(createTagOption);

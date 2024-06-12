@@ -133,6 +133,9 @@ function dashboardFilter(){
         generateSubjectDashboard();
     }
     if (filterSelector.value == "Assignment"){
+
+        clearOptions()
+
         let subjectChoice = document.getElementById('subject-choice');
 
         const response = fetch("http://localhost:2000/get/entries/list")
@@ -150,7 +153,9 @@ function dashboardFilter(){
 
                 let newSubjectChoice = document.createElement('option');
                 newSubjectChoice.innerText = subject;
-                newSubjectChoice.value = subject
+                newSubjectChoice.value = subject;
+                newSubjectChoice.className = 'generated-option';
+                
                 subjectChoice.appendChild(newSubjectChoice);
             }
         })
@@ -158,6 +163,13 @@ function dashboardFilter(){
     if (filterSelector.value == "Tag"){
         filterSelector.value = "Dashboard Filter";
         generateTagDashboard()
+    }
+}
+
+function clearOptions() {
+    let options = document.getElementsByClassName('generated-option');
+    while (options.length > 0){
+        options[0].remove();
     }
 }
 
@@ -199,7 +211,6 @@ function generateSubjectDashboard(){
                 // Generates cards to display each subject and respective time
                 const subject = subjects[i];
                 const totalDuration = getSubjectTime(data, subjects[i])
-                console.log(subjects[i], totalDuration);
 
                 let newSubjectCard = document.createElement('div');
                 newSubjectCard.id = subject;
@@ -270,8 +281,7 @@ function generateAssignmentDashboard(subject){
             for (let i = 0; i < assignments.length; i++){
                 // Generates cards to display each subject and respective time
                 const assignment = assignments[i];
-                const totalDuration = getAssignmentTime(data, assignment)
-                console.log(assignments[i], totalDuration);
+                const totalDuration = getAssignmentTime(data, assignment);
 
                 let newAssignmentCard = document.createElement('div');
                 newAssignmentCard.id = assignment;
@@ -342,7 +352,6 @@ function generateTagDashboard(){
                 // Generates cards to display each subject and respective time
                 const tag = tags[i];
                 const totalDuration = getTagTime(data, tag)
-                console.log(tag, totalDuration);
 
                 let newTagCard = document.createElement('div');
                 newTagCard.id = tag;
