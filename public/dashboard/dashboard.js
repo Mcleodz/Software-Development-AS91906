@@ -126,10 +126,57 @@ function getTotalTime(entryObj){
     return convertSeconds(total);
 }
 
+function dashboardFilter(){
+    const filterSelector = document.getElementById('dashboard-filter');
+    if (filterSelector.value == "Subject"){
+        filterSelector.value = "Dashboard Filter";
+        generateSubjectDashboard();
+    }
+    if (filterSelector.value == "Assignment"){
+        let subjectChoice = document.getElementById('subject-choice');
+
+        const response = fetch("http://localhost:2000/get/entries/list")
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            const subjects = getSubjects(data);
+
+            subjectChoice.style.display = 'block';
+            document.getElementById('filter-master').style.marginLeft = '35.6%';
+
+            for (let i = 0; i < subjects.length; i++){
+                let subject = subjects[i];
+
+                let newSubjectChoice = document.createElement('option');
+                newSubjectChoice.innerText = subject;
+                newSubjectChoice.value = subject
+                subjectChoice.appendChild(newSubjectChoice);
+            }
+        })
+    }
+    if (filterSelector.value == "Tag"){
+        filterSelector.value = "Dashboard Filter";
+        generateTagDashboard()
+    }
+}
+
+function subjectSelected(){ 
+    let filterSelector = document.getElementById('dashboard-filter');
+    let subjectChoice = document.getElementById('subject-choice');
+    subjectChoice.style.display = 'none';
+    generateAssignmentDashboard(subjectChoice.value);
+    subjectChoice.value = "Choose a Subject";
+    filterSelector.value = "Dashboard Filter";
+    document.getElementById('filter-master').style.marginLeft = '47%';
+}
+
 function generateSubjectDashboard(){
     clearDashboard()
 
     document.title = 'Verso - Subject Dashboard';
+
+    document.getElementById('header').innerText = 'Dashboard - Subject';
 
     let dashboardMaster = document.getElementById('dashboard-master');
 
@@ -195,19 +242,13 @@ function generateSubjectDashboard(){
     toggleDiv('filter-master');
 }
 
-function generateAssignmentDashboard(){
-
-    let subject = document.getElementById('filter-assignment').value;
-
-    if (subject == ''){
-        alert('please select a subject to view');
-        return `404 ${subject} not found`;
-    }
+function generateAssignmentDashboard(subject){
 
     clearDashboard()
 
+    document.getElementById('header').innerText = `Dashboard - ${subject}'s Assignments`;
+
     let dashboardMaster = document.getElementById('dashboard-master');
-    document.getElementById('filter-assignment').value = '';
 
     document.title = `Verso - Assignment Dashboard for ${subject}` ;
 
@@ -277,6 +318,8 @@ function generateTagDashboard(){
     clearDashboard()
 
     document.title = 'Verso - Tag Dashboard';
+
+    document.getElementById('header').innerText = 'Dashboard - Tags';
 
     let dashboardMaster = document.getElementById('dashboard-master');
 
