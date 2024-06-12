@@ -126,8 +126,8 @@ function getSubjectOptions(){
                 subjectSelector.appendChild(newSubjectOption);
             }
             let createSubjectOption = document.createElement('option');
-            createSubjectOption.innerText = '+';
-            createSubjectOption.id = 'new-option';
+            createSubjectOption.innerText = "+";
+            createSubjectOption.id = 'new-subject-option';
             createSubjectOption.value = 'new';
             subjectSelector.appendChild(createSubjectOption);
         })
@@ -135,7 +135,9 @@ function getSubjectOptions(){
 
 function getAssignmentOptions(){
   const assignmentSelector = document.getElementById('assignment');
-  clearOptions();
+  if (document.getElementsByClassName('generated-option').length > 0){
+    clearOptions();
+  }
 
   let subject = document.getElementById('subject').value;
   const response = fetch("http://localhost:2000/get/entries/list")
@@ -143,7 +145,7 @@ function getAssignmentOptions(){
             return response.json();
         })
         .then((data) => {
-            let assignments = getAssignments(data, subject)
+            let assignments = getAssignments(data, subject);
             for (let i = 0; i < assignments.length; i++){
                 // Generates cards to display each subject and respective time
                 const assignment = assignments[i];
@@ -156,7 +158,7 @@ function getAssignmentOptions(){
             }
             let createAssignmentOption = document.createElement('option');
             createAssignmentOption.innerText = "+";
-            createAssignmentOption.id = 'new-option';
+            createAssignmentOption.id = 'new-assignment-option';
             createAssignmentOption.value = 'new';
             assignmentSelector.appendChild(createAssignmentOption);
         })
@@ -189,7 +191,7 @@ function getTagOptions(){
             }
             let createTagOption = document.createElement('option');
             createTagOption.innerText = "+";
-            createTagOption.id = 'new-option';
+            createTagOption.id = 'new-tag-option';
             createTagOption.value = 'new';
             tagSelector.appendChild(createTagOption);
         })

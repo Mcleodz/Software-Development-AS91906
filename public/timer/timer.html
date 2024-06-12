@@ -27,15 +27,15 @@
         <input class="timer" id="timer" placeholder="What are you working on?" tabindex="0"></input>
         <input class="timer-bar-slave" id="subject-input" tabindex="0" placeholder="New Subject" style="display:none;">
         <select class="timer-bar-slave" id="subject" tabindex="0" onchange="getAssignmentOptions(), createNewOption('subject')">
-            <option selected disabled>Subject</option>
+            <option>Subject</option>
         </select>
         <input class="timer-bar-slave" id="assignment-input" tabindex="0" placeholder="New Standard" style="display:none;">
         <select class="timer-bar-slave" id="assignment" tabindex="0" onchange="createNewOption('assignment')">
-            <option selected disabled>Standard</option>
+            <option>Standard</option>
         </select>
         <input class="timer-bar-slave" id="tag-input" tabindex="0" placeholder="New Tag" style="display:none;">
         <select class="timer-bar-slave" id="tag" tabindex="0" onchange="createNewOption('tag')">
-            <option selected disabled>Tag</option>
+            <option>Tag</option>
         </select>
         <button class="timer-bar-button" id="play" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
         <button class="timer-bar-button" id="stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>

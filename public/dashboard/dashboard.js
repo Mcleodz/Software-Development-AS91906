@@ -28,7 +28,7 @@ function convertSeconds(duration){
         output = hours_display + "hrs "
     }
     // Check if total time is not 0
-    else if (output == seconds){
+    else if (output == '0'){
         output = "0secs";
     }
     // Reformat total time if above conditions are not met
@@ -134,7 +134,7 @@ function dashboardFilter(){
     }
     if (filterSelector.value == "Assignment"){
 
-        clearOptions()
+        clearOptions();
 
         let subjectChoice = document.getElementById('subject-choice');
 
