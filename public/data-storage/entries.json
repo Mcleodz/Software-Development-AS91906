@@ -1,2 +1,65 @@
 [
+    {
+        "name": "Working on Verso",
+        "subject": "PSYC 121",
+        "assignment": "Test 1",
+        "tag": "Lab",
+        "duration": 449745
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "PSYC 121",
+        "assignment": "Test 2",
+        "tag": "Tutorial",
+        "duration": 90255
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "HLWB 102",
+        "assignment": "Test 2",
+        "tag": "Lecture",
+        "duration": 34644
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "HLWB 102",
+        "assignment": "Test 1",
+        "tag": "Tutorial",
+        "duration": 136177
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "HLWB 102",
+        "assignment": "Critical Research Project",
+        "tag": "Self Directed Study",
+        "duration": 369179
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "MARK 101",
+        "assignment": "Test 2",
+        "tag": "Self Directed Study",
+        "duration": 226531
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "MARK 101",
+        "assignment": "Test 1",
+        "tag": "Lecture",
+        "duration": 313469
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "FILM 101",
+        "assignment": "Critical Research Project 3",
+        "tag": "Tutorial",
+        "duration": 234235
+    },
+    {
+        "name": "Working on Verso",
+        "subject": "FILM 101",
+        "assignment": "Critical Research Project 2",
+        "tag": "Lecture",
+        "duration": 305765
+    }
 ]

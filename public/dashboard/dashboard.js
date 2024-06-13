@@ -84,11 +84,11 @@ function getTags(entryObj){
     return tagsList
 }
 
-function getAssignmentTime(entryObj, assignment){
+function getAssignmentTime(entryObj, assignment, subject){
     // Gets total time for specified assignment
     let assignmentTotal = 0;
     for (let i=0; i < entryObj.length; i++){
-        if (entryObj[i].assignment == assignment){
+        if (entryObj[i].assignment == assignment && entryObj[i].subject == subject){
             assignmentTotal += entryObj[i].duration;
         }
     }
@@ -131,6 +131,7 @@ function dashboardFilter(){
     if (filterSelector.value == "Subject"){
         filterSelector.value = "Dashboard Filter";
         generateSubjectDashboard();
+        filterSelected();
     }
     if (filterSelector.value == "Assignment"){
 
@@ -162,25 +163,30 @@ function dashboardFilter(){
     }
     if (filterSelector.value == "Tag"){
         filterSelector.value = "Dashboard Filter";
-        generateTagDashboard()
+        generateTagDashboard();
+        filterSelected();
     }
 }
 
 function clearOptions() {
     let options = document.getElementsByClassName('generated-option');
+
     while (options.length > 0){
         options[0].remove();
     }
 }
 
-function subjectSelected(){ 
-    let filterSelector = document.getElementById('dashboard-filter');
+function filterSelected(){ 
     let subjectChoice = document.getElementById('subject-choice');
+    let dashboardSelector = document.getElementById('dashboard-filter');
+
+    if (dashboardSelector.value == 'Assignment'){
+        generateAssignmentDashboard(subjectChoice.value);
+        subjectChoice.value = 'Choose a Subject';
+    }
     subjectChoice.style.display = 'none';
-    generateAssignmentDashboard(subjectChoice.value);
-    subjectChoice.value = "Choose a Subject";
-    filterSelector.value = "Dashboard Filter";
-    document.getElementById('filter-master').style.marginLeft = '47%';
+    dashboardSelector.value = 'Dashboard Filter';
+    document.getElementById('filter-master').style.marginLeft = '45%';
 }
 
 function generateSubjectDashboard(){
@@ -281,7 +287,7 @@ function generateAssignmentDashboard(subject){
             for (let i = 0; i < assignments.length; i++){
                 // Generates cards to display each subject and respective time
                 const assignment = assignments[i];
-                const totalDuration = getAssignmentTime(data, assignment);
+                const totalDuration = getAssignmentTime(data, assignment, subject);
 
                 let newAssignmentCard = document.createElement('div');
                 newAssignmentCard.id = assignment;
