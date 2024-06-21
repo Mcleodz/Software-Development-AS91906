@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <head>
     <link rel="stylesheet" href="/styles"/>
@@ -26,7 +27,7 @@
     <div class="timer-bar-master" id="timer-master">
         <input class="timer" id="timer" placeholder="What are you working on?" tabindex="0"></input>
         <input class="timer-bar-slave" id="subject-input" tabindex="0" placeholder="New Subject" style="display:none;">
-        <select class="timer-bar-slave" id="subject" tabindex="0" onchange="getAssignmentOptions(), createNewOption('subject')">
+        <select class="timer-bar-slave" id="subject" tabindex="0" onchange="showAssignmentOptions(), createNewOption('subject')">
             <option selected disabled>Subject</option>
         </select>
         <input class="timer-bar-slave" id="assignment-input" tabindex="0" placeholder="New Standard" style="display:none;">
