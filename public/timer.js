@@ -1,16 +1,44 @@
-window.onload = function() {
+window.onload = async function() {
   output = document.getElementById('out');
   playpause = document.getElementById('play');
 
-  timer;
-  count = 0;
+  // Check if timer is already running;
+  let response = await fetch('/resume');
+  let existingData = await response.json()
+  count = Number(existingData.count) + (existingData.duration);
+
+  timer = null;
+
+  if(existingData.count > 1){
+    startTimer();
+  }
+
+else{
+  output.innerHTML = "00:00:00"
+}
 
   // Generate Static Options
   showSubjectOptions();
   showTagOptions()
 }
 
-function startTimer(){
+window.onpagehide = async function() {
+  const TIMEOFPAUSE = new Date;
+  const TIMEOFPAUSEPROCESSED = TIMEOFPAUSE.getTime();
+
+  fetch("/pause", {
+    method:"POST",
+    body: JSON.stringify({
+      unixtimeonpause: TIMEOFPAUSEPROCESSED,
+      durationonpause: count
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+}
+
+async function startTimer(){
 let seconds = 0;
   if (timer) {
       clearInterval(timer);
@@ -48,6 +76,14 @@ function stopTimer(){
       duration: length
     })
 
+  const displayEntryData = JSON.stringify({
+    name: name,
+    subject: subject,
+    assignment: assignment,
+    tag: tag,
+    duration: seconds
+  })
+
   fetch("/post/newEntry", {
       method: "POST",
       body: entryData,
@@ -56,7 +92,18 @@ function stopTimer(){
       }
     });
 
-  displayEntry(entryData);
+  fetch("/pause", {
+    method:"POST",
+    body: JSON.stringify({
+      unixtimeonpause: 0,
+      durationonpause: 0
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+
+  displayEntry(displayEntryData);
 
   // Resets timer variable
   clearInterval(timer);
@@ -97,7 +144,7 @@ function displayEntry(entryDataJson){
   // Displays new entry data on timer dashboard
   const entryDiv = document.getElementById('entry-display');
   const newEntry = document.createElement('p');
-  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Tags: ${tag} </br> Length: ${length}`;
+  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Tags: ${tag} </br> Length: ${convertSeconds(length)}`;
   newEntry.innerHTML = entryText;
   newEntry.className = 'entry-display-slave';
   newEntry.id = name;
@@ -116,16 +163,10 @@ async function showSubjectOptions(){
       newOption.innerText = subjectList[i];
       subjectSelector.appendChild(newOption);
   }
-  if (subjectList.length >= 4){
-      alert("Maximum number of Subjects for this semester has been reached")
-  }
-  else{
-      // Generating New Assignment Option
-      let newSubjectOption = document.createElement("option");
-      newSubjectOption.value = 'new';
-      newSubjectOption.innerText = '+';
-      subjectSelector.appendChild(newSubjectOption);
-  }
+    let newSubjectOption = document.createElement("option");
+    newSubjectOption.value = 'new';
+    newSubjectOption.innerText = '+';
+    subjectSelector.appendChild(newSubjectOption);
 }
 
 async function showTagOptions(){

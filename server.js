@@ -1,11 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { notEqual } = require('assert');
 const app = express();
 const port = 2000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+UNIXTIMEONPAUSE = 0;
+DURATIONONPAUSE = 0;
+
+app.get('/', (req, res) =>{
+    res.redirect('/timer');
+});
 
 // Public resource handling
 app.get('/timer', (req, res) =>{
@@ -194,7 +200,6 @@ app.post('/post/newEntry', async (req, res) =>{
     }
 
     arr.push(newEntryData);
-    console.log(arr);
     entriesObj = JSON.stringify(arr, null, 4);
     fs.writeFileSync(__dirname + "/src/entries.json", entriesObj,'utf-8')
 
@@ -215,6 +220,43 @@ app.post('/post/clearEntries', async (req, res) =>{
 
     res.sendStatus(200);
 });
+
+app.post('/pause', (req, res) =>{
+    UNIXTIMEONPAUSE = req.body.unixtimeonpause;
+    DURATIONONPAUSE = req.body.durationonpause;
+
+    res.sendStatus(200);
+})
+
+app.get('/resume', (req, res) =>{
+    if (UNIXTIMEONPAUSE > 0){
+        let newTime = new Date;
+        let newTimeProcessed = newTime.getTime();
+
+        let deltaTime = (newTimeProcessed - UNIXTIMEONPAUSE)/1000;
+
+        let resObj = {
+            count:deltaTime,
+            duration:DURATIONONPAUSE
+        }
+
+        res.send(resObj);
+    }
+
+    else{
+
+        let resObj = JSON.stringify({
+            count:0,
+            duration:DURATIONONPAUSE
+        })
+
+        res.send(resObj);
+    }
+
+    UNIXTIMEONPAUSE = 0;
+    DURATIONONPAUSE = 0;
+
+})
 
 // Starting server
 app.listen(port, () => {
