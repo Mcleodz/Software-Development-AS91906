@@ -244,7 +244,6 @@ app.get('/resume', (req, res) =>{
     }
 
     else{
-
         let resObj = JSON.stringify({
             count:0,
             duration:DURATIONONPAUSE
@@ -255,7 +254,6 @@ app.get('/resume', (req, res) =>{
 
     UNIXTIMEONPAUSE = 0;
     DURATIONONPAUSE = 0;
-
 })
 
 // Starting server

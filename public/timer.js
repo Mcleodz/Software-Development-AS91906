@@ -2,6 +2,10 @@ window.onload = async function() {
   output = document.getElementById('out');
   playpause = document.getElementById('play');
 
+  // Generate Static Options
+  showSubjectOptions();
+  showTagOptions();
+
   // Check if timer is already running;
   let response = await fetch('/resume');
   let existingData = await response.json()
@@ -12,14 +16,10 @@ window.onload = async function() {
   if(existingData.count > 1){
     startTimer();
   }
+  else{
+    output.innerHTML = "00:00:00"
+  }
 
-else{
-  output.innerHTML = "00:00:00"
-}
-
-  // Generate Static Options
-  showSubjectOptions();
-  showTagOptions()
 }
 
 window.onpagehide = async function() {
@@ -144,7 +144,7 @@ function displayEntry(entryDataJson){
   // Displays new entry data on timer dashboard
   const entryDiv = document.getElementById('entry-display');
   const newEntry = document.createElement('p');
-  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Tags: ${tag} </br> Length: ${convertSeconds(length)}`;
+  const entryText = `${name} </br> <hr> Subject: ${subject} </br> Assignment: ${assignment} </br> Tags: ${tag} </br> Length: ${length}`;
   newEntry.innerHTML = entryText;
   newEntry.className = 'entry-display-slave';
   newEntry.id = name;
@@ -188,6 +188,8 @@ async function showTagOptions(){
 }
 
 async function showAssignmentOptions(){
+  clearGeneratedOptions()
+
   const assignmentSelector = document.getElementById('assignment');
   const subjectSelector = document.getElementById('subject');
 
@@ -198,12 +200,16 @@ async function showAssignmentOptions(){
       let newOption = document.createElement("option");
       newOption.value = assignmentList[i];
       newOption.innerText = assignmentList[i];
+      newOption.className = 'created';
+      console.log(newOption.className);
       assignmentSelector.appendChild(newOption);
   }
   // Generating New Assignment Option
   let newAssignmentOption = document.createElement("option");
   newAssignmentOption.value = 'new';
   newAssignmentOption.innerText = '+';
+  newAssignmentOption.className = 'created';
+  console.log(newAssignmentOption.className)
   assignmentSelector.appendChild(newAssignmentOption);
 }
 
@@ -215,5 +221,15 @@ function createNewOption(id){
       selector.remove();
       selectorInput.style.display="block";
       selectorInput.id = id;
+  }
+}
+
+function clearGeneratedOptions(){
+  const generatedOptionsList = document.getElementsByClassName('created');
+
+  console.log(generatedOptionsList.length);
+
+  while (generatedOptionsList.length > 0){
+    generatedOptionsList[0].remove()
   }
 }
