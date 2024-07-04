@@ -244,8 +244,8 @@ async function generateSubjectDashboard(){
 
     let graphTitle = `Time breakdown by Subject`;
 
-    generateLeftGraph(graphTitle, subjects, subjectTimesList);
-    generateRightGraph(graphTitle, subjects, subjectTimesList);
+    generateLeftGraph(graphTitle, subjects, subjectTimesList, totalTime);
+    generateRightGraph(graphTitle, subjects, subjectTimesList, totalTime);
 }
 
 async function generateAssignmentDashboard(subject){
@@ -334,8 +334,8 @@ async function generateAssignmentDashboard(subject){
 
     let graphTitle = `Time breakdown by assignment for ${subject}`;
 
-    generateLeftGraph(graphTitle, assignments, assignmentTimesList);
-    generateRightGraph(graphTitle, assignments, assignmentTimesList);
+    generateLeftGraph(graphTitle, assignments, assignmentTimesList, totalTime);
+    generateRightGraph(graphTitle, assignments, assignmentTimesList, totalTime);
 }
 
 async function generateTagDashboard(){
@@ -423,14 +423,20 @@ async function generateTagDashboard(){
 
     let graphTitle = `Time breakdown by Tag`;
 
-    generateLeftGraph(graphTitle, tags, tagTimesList);
-    generateRightGraph(graphTitle, tags, tagTimesList);
+    generateLeftGraph(graphTitle, tags, tagTimesList, totalTime);
+    generateRightGraph(graphTitle, tags, tagTimesList, totalTime);
 } 
 
-function generateLeftGraph(title, labels, times){
-
+function generateLeftGraph(title, labels, times, totalTime){
     const leftGraphTitle = document.getElementById('left-graph-title');
     leftGraphTitle.innerHTML = title;
+    
+    let timesListasPercent = [];
+
+    for(i=0; i < times.length; i++){
+        let currentTime = ((times[i] / totalTime)*100).toFixed();
+        timesListasPercent.push(currentTime);
+    }
 
     new Chart("graph-left", {
         type: "doughnut",
@@ -438,7 +444,8 @@ function generateLeftGraph(title, labels, times){
             labels: labels,
             datasets: [{
             backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
-            data: times}]
+            data: timesListasPercent,
+            }]
         },
         options: {
             title: {
@@ -448,9 +455,16 @@ function generateLeftGraph(title, labels, times){
     });
 }
 
-function generateRightGraph(title, labels, times){
+function generateRightGraph(title, labels, times, totalTime){
     const rightGraphTitle = document.getElementById('right-graph-title');
     rightGraphTitle.innerHTML = title;
+
+    let timesListasPercent = [];
+
+    for(i=0; i < times.length; i++){
+        let currentTime = ((times[i] / totalTime)*100).toFixed();
+        timesListasPercent.push(currentTime);
+    }
 
     new Chart("graph-right", {
         type: "doughnut",
@@ -458,7 +472,7 @@ function generateRightGraph(title, labels, times){
             labels: labels,
             datasets: [{
             backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
-            data: times}]
+            data: timesListasPercent}]
         },
         options: {
             title: {

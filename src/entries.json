@@ -1,58 +1,23 @@
 [
     {
-        "name": "Testing",
-        "subject": "COMP 103",
+        "name": "Testing Dashboard Graphs",
+        "subject": "COMP 101",
         "assignment": "AS91906",
-        "tag": "Internal",
-        "duration": "25052"
+        "tag": "INTERNAL",
+        "duration": "218"
     },
     {
-        "name": "Testing",
-        "subject": "PHYS 101",
-        "assignment": "AS91524",
-        "tag": "External",
-        "duration": "25370"
+        "name": "Testing Dashboard Graphs 2",
+        "subject": "ENGL 102",
+        "assignment": "AS91475",
+        "tag": "INTERNAL",
+        "duration": "459"
     },
     {
-        "name": "Testing",
-        "subject": "MATH 101",
-        "assignment": "AS91578",
-        "tag": "External",
-        "duration": "16361"
-    },
-    {
-        "name": "Testing",
-        "subject": "ENGL 101",
-        "assignment": "AS91906",
-        "tag": "Internal",
-        "duration": "16249"
-    },
-    {
-        "name": "Testing",
-        "subject": "COMP 103",
-        "assignment": "AS91907",
-        "tag": "Internal",
-        "duration": "16249"
-    },
-    {
-        "name": "Testing",
-        "subject": "PHYS 101",
-        "assignment": "AS91526",
-        "tag": "External",
-        "duration": "16361"
-    },
-    {
-        "name": "Testing",
-        "subject": "MATH 101",
-        "assignment": "AS91579",
-        "tag": "External",
-        "duration": "25370"
-    },
-    {
-        "name": "Testing",
-        "subject": "ENGL 101",
-        "assignment": "AS91425",
-        "tag": "Internal",
-        "duration": "25052"
+        "name": "Testing Sashboard Graphs 3",
+        "subject": "PHYS 103",
+        "assignment": "AS91510",
+        "tag": "EXTERNAL",
+        "duration": "1392"
     }
 ]
