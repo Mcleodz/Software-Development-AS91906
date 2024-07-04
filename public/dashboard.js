@@ -1,5 +1,5 @@
 window.onload = function(){
-    generateSubjectDashboard()
+    generateSubjectDashboard();
 }
 
 function toggleDiv(id) {
@@ -28,7 +28,7 @@ function convertSeconds(duration){
         output = hours_display + "hrs "
     }
     // Check if total time is not 0
-    else if (output == '0'){
+    else if (duration == ''){
         output = "0secs";
     }
     // Reformat total time if above conditions are not met
@@ -117,31 +117,50 @@ function clearDashboard() {
     newDashboardMaster.id = 'dashboard-master';
     newDashboardMaster.className = 'dashboard-master';
     
-    let newgraphMaster = document.createElement('div');
-    newgraphMaster.id = 'graph-master';
-    newgraphMaster.className = 'graph-master';
+    let newGraphMaster = document.createElement('div');
+    newGraphMaster.id = 'graph-master';
+    newGraphMaster.className = 'graph-master';
 
-    let newgraphLeft = document.createElement('div');
-    newgraphLeft.id = 'graph-led';
-    newgraphLeft.className = 'graph-slave';
+    let newGraphLeftMaster = document.createElement('div');
+    newGraphLeftMaster.id = 'graph-left-master';
+    newGraphLeftMaster.className = 'graph-slave';
+
+    let leftGraphTitle = document.createElement("p");
+    leftGraphTitle.className = 'dashboard-slave-title-text';
+    leftGraphTitle.id = "left-graph-title";
+    leftGraphTitle.style.color = "#4B4237";
+    newGraphLeftMaster.appendChild(leftGraphTitle);
+
+    let newGraphLeft = document.createElement('canvas');
+    newGraphLeft.id = 'graph-left';
     
-    let newgraphRight = document.createElement('div');
-    newgraphRight.id = 'graph-right';
-    newgraphRight.className = 'graph-slave';
+    let newGraphRightMaster = document.createElement('div');
+    newGraphRightMaster.id = 'graph-right-master';
+    newGraphRightMaster.className = 'graph-slave';
+
+    let rightGraphTitle = document.createElement("p");
+    rightGraphTitle.className = 'dashboard-slave-title-text';
+    rightGraphTitle.id = "right-graph-title";
+    rightGraphTitle.style.color = "#4B4237";
+    newGraphRightMaster.appendChild(rightGraphTitle);
+
+    let newGraphRight = document.createElement('canvas');
+    newGraphRight.id = 'graph-right';
 
     body.appendChild(newDashboardMaster);
-    body.appendChild(newgraphMaster);
+    body.appendChild(newGraphMaster);
 
-    newgraphMaster.appendChild(newgraphLeft);
-    newgraphMaster.appendChild(newgraphRight);
+    newGraphLeftMaster.appendChild(newGraphLeft);
+    newGraphRightMaster.appendChild(newGraphRight);
 
-    return 200
+    newGraphMaster.appendChild(newGraphLeftMaster);
+    newGraphMaster.appendChild(newGraphRightMaster);
 }
 
 async function generateSubjectDashboard(){
-
     // Resets previous dashboard
-    clearDashboard()
+    clearDashboard();
+
     document.title = 'Verso - Subject Dashboard';
     document.getElementById('header').innerText = 'Dashboard - Subject';
     let dashboardMaster = document.getElementById('dashboard-master');
@@ -155,6 +174,8 @@ async function generateSubjectDashboard(){
         "total" : "#EDE7D9",
     }
 
+    let subjectTimesList = []
+
     // Gets list of subjects from server
     const response = await fetch("/get/subjects");
     const subjects = await response.json();
@@ -165,6 +186,8 @@ async function generateSubjectDashboard(){
         // Gets time for current subject from server
         const currentSubjectTimeResponse = await fetch(`/get/times/subject/${currentSubject}`);
         const currentSubjectTime = await currentSubjectTimeResponse.text();
+
+        subjectTimesList.push(Number(currentSubjectTime));
 
         // Creates Time Card for current subject
         let newSubjectCard = document.createElement('div');
@@ -192,7 +215,7 @@ async function generateSubjectDashboard(){
     // Gets total time for Total Time Card
     const totalTimeResponse = await fetch('/get/times/total');
     const totalTime = await totalTimeResponse.text()
-
+    console.log(Number(totalTime))
     // Creates Total Time Card 
     let totalCard = document.createElement('div');
     totalCard.id = "total";
@@ -218,6 +241,11 @@ async function generateSubjectDashboard(){
 
     // Resets Filter Div
     toggleDiv('filter-master');
+
+    let graphTitle = `Time breakdown by Subject`;
+
+    generateLeftGraph(graphTitle, subjects, subjectTimesList);
+    generateRightGraph(graphTitle, subjects, subjectTimesList);
 }
 
 async function generateAssignmentDashboard(subject){
@@ -241,13 +269,16 @@ async function generateAssignmentDashboard(subject){
     const response = await fetch(`/get/assignments/${subject}`);
     const assignments = await response.json();
 
+    let assignmentTimesList = [];
+
     for (i=0; i < assignments.length; i++){
         let currentAssignment = assignments[i];
         
         // Gets time for current Assignment from server
         const currentAssignmentTimeResponse = await fetch(`/get/times/assignment/${subject}/${currentAssignment}`);
         const currentAssignmentTime = await currentAssignmentTimeResponse.text();
-
+        assignmentTimesList.push(currentAssignmentTime);
+        
         // Creates Time Card for Assignment subject
         let newAssignmentCard = document.createElement('div');
         newAssignmentCard.id = currentAssignment;
@@ -300,6 +331,11 @@ async function generateAssignmentDashboard(subject){
 
     // Resets Filter Div
     toggleDiv('filter-master');
+
+    let graphTitle = `Time breakdown by assignment for ${subject}`;
+
+    generateLeftGraph(graphTitle, assignments, assignmentTimesList);
+    generateRightGraph(graphTitle, assignments, assignmentTimesList);
 }
 
 async function generateTagDashboard(){
@@ -322,6 +358,7 @@ async function generateTagDashboard(){
     // Gets list of Assignments from server
     const response = await fetch(`/get/tags`);
     const tags = await response.json();
+    let tagTimesList = [];
 
     for (i=0; i < tags.length; i++){
         let currentTag = tags[i];
@@ -329,6 +366,7 @@ async function generateTagDashboard(){
         // Gets time for current Assignment from server
         const currentTagTimeResponse = await fetch(`/get/times/tag/${currentTag}`);
         const currentTagTime = await currentTagTimeResponse.text();
+        tagTimesList.push(currentTagTime);
 
         // Creates Time Card for Assignment subject
         let newTagCard = document.createElement('div');
@@ -382,4 +420,50 @@ async function generateTagDashboard(){
 
     // Resets Filter Div
     toggleDiv('filter-master');
+
+    let graphTitle = `Time breakdown by Tag`;
+
+    generateLeftGraph(graphTitle, tags, tagTimesList);
+    generateRightGraph(graphTitle, tags, tagTimesList);
+} 
+
+function generateLeftGraph(title, labels, times){
+
+    const leftGraphTitle = document.getElementById('left-graph-title');
+    leftGraphTitle.innerHTML = title;
+
+    new Chart("graph-left", {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+            backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
+            data: times}]
+        },
+        options: {
+            title: {
+            display: true,
+            text: ""},
+        }
+    });
+}
+
+function generateRightGraph(title, labels, times){
+    const rightGraphTitle = document.getElementById('right-graph-title');
+    rightGraphTitle.innerHTML = title;
+
+    new Chart("graph-right", {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+            backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
+            data: times}]
+        },
+        options: {
+            title: {
+            display: true,
+            text: ""},
+        }
+    });
 }

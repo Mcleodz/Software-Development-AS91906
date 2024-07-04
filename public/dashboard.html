@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="/styles"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
     <script src="/dashboard/script"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <title>
         Verso - Dashboard
     </title>
@@ -42,12 +43,12 @@
     </div>
 
     <div class="graph-master" id="graph-master">
-        <div class="graph-slave" id="graph-left">
-
+        <div class="graph-slave" id="graph-left-master">
+            <canvas id="graph-left"></canvas>
         </div>
 
-        <div class="graph-slave" id="graph-right">
-
+        <canvas class="graph-slave" id="graph-right-master">
+            <canvas id="graph-right"></canvas>
         </div>
     </div>
 </body>

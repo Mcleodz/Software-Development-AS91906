@@ -115,7 +115,7 @@ app.get('/get/times/subject/:subject', (req, res) =>{
 
     for (i=0; i < arr.length; i++){
         if (arr[i].subject == subject){
-            totalTime += arr[i].duration;
+            totalTime += Number(arr[i].duration);
         }
     }
     res.send(String(totalTime));
@@ -135,7 +135,7 @@ app.get('/get/times/assignment/:subject/:assignment', (req, res) =>{
 
     for (i=0; i < arr.length; i++){
         if (arr[i].subject == subject && arr[i].assignment == assignment){
-            totalTime += arr[i].duration;
+            totalTime += Number(arr[i].duration);
         }
     }
     res.send(String(totalTime));
@@ -154,7 +154,7 @@ app.get('/get/times/tag/:tag', (req, res) =>{
 
     for (i=0; i < arr.length; i++){
         if (arr[i].tag == tag){
-            totalTime += arr[i].duration;
+            totalTime += Number(arr[i].duration);
         }
     }
     res.send(String(totalTime));
@@ -171,7 +171,7 @@ app.get('/get/times/total', (req, res) =>{
     let totalTime = 0;
 
     for (i=0; i < arr.length; i++){
-        totalTime += arr[i].duration;
+        totalTime = totalTime + Number(arr[i].duration);
     }
     res.send(String(totalTime));
 });

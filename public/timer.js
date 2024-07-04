@@ -13,7 +13,7 @@ window.onload = async function() {
 
   timer = null;
 
-  if(existingData.count > 1){
+  if(existingData.duration > 0){
     startTimer();
   }
   else{
@@ -23,19 +23,21 @@ window.onload = async function() {
 }
 
 window.onpagehide = async function() {
-  const TIMEOFPAUSE = new Date;
-  const TIMEOFPAUSEPROCESSED = TIMEOFPAUSE.getTime();
+  if (count != 0){
+    const TIMEOFPAUSE = new Date;
+    const TIMEOFPAUSEPROCESSED = TIMEOFPAUSE.getTime();
 
-  fetch("/pause", {
-    method:"POST",
-    body: JSON.stringify({
-      unixtimeonpause: TIMEOFPAUSEPROCESSED,
-      durationonpause: count
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
-  });
+    fetch("/pause", {
+      method:"POST",
+      body: JSON.stringify({
+        unixtimeonpause: TIMEOFPAUSEPROCESSED,
+        durationonpause: count
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    });
+  }
 }
 
 async function startTimer(){

@@ -1,1 +1,58 @@
-[]
+[
+    {
+        "name": "Testing",
+        "subject": "COMP 103",
+        "assignment": "AS91906",
+        "tag": "Internal",
+        "duration": "25052"
+    },
+    {
+        "name": "Testing",
+        "subject": "PHYS 101",
+        "assignment": "AS91524",
+        "tag": "External",
+        "duration": "25370"
+    },
+    {
+        "name": "Testing",
+        "subject": "MATH 101",
+        "assignment": "AS91578",
+        "tag": "External",
+        "duration": "16361"
+    },
+    {
+        "name": "Testing",
+        "subject": "ENGL 101",
+        "assignment": "AS91906",
+        "tag": "Internal",
+        "duration": "16249"
+    },
+    {
+        "name": "Testing",
+        "subject": "COMP 103",
+        "assignment": "AS91907",
+        "tag": "Internal",
+        "duration": "16249"
+    },
+    {
+        "name": "Testing",
+        "subject": "PHYS 101",
+        "assignment": "AS91526",
+        "tag": "External",
+        "duration": "16361"
+    },
+    {
+        "name": "Testing",
+        "subject": "MATH 101",
+        "assignment": "AS91579",
+        "tag": "External",
+        "duration": "25370"
+    },
+    {
+        "name": "Testing",
+        "subject": "ENGL 101",
+        "assignment": "AS91425",
+        "tag": "Internal",
+        "duration": "25052"
+    }
+]
