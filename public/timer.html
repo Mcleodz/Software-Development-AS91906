@@ -25,21 +25,21 @@
 
     <div class="timer-bar-master" id="timer-master">
         <input class="timer" id="timer" placeholder="What are you working on?" tabindex="0"></input>
-        <input class="timer-bar-slave" id="subject-input" tabindex="0" placeholder="New Subject" style="display:none;">
-        <select class="timer-bar-slave" id="subject" tabindex="0" onchange="getAssignmentOptions(), createNewOption('subject')">
-            <option selected disabled>Subject</option>
+        <input class="timer-new-option" id="subject-input" tabindex="0" placeholder="New Subject" style="display:none;">
+        <select class="timer-bar-slave" id="subject" tabindex="0" onchange="showAssignmentOptions(), createNewOption('subject')">
+            <option selected disabled value="subject">Subject</option>
         </select>
-        <input class="timer-bar-slave" id="assignment-input" tabindex="0" placeholder="New Standard" style="display:none;">
+        <input class="timer-new-option" id="assignment-input" tabindex="0" placeholder="New Standard" style="display:none;">
         <select class="timer-bar-slave" id="assignment" tabindex="0" onchange="createNewOption('assignment')">
-            <option selected disabled>Standard</option>
+            <option selected disabled value="assignment">Standard</option>
         </select>
-        <input class="timer-bar-slave" id="tag-input" tabindex="0" placeholder="New Tag" style="display:none;">
+        <input class="timer-new-option" id="tag-input" tabindex="0" placeholder="New Tag" style="display:none;">
         <select class="timer-bar-slave" id="tag" tabindex="0" onchange="createNewOption('tag')">
-            <option selected disabled>Tag</option>
+            <option selected disabled value="tag">Tag</option>
         </select>
         <button class="timer-bar-button" id="play" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
         <button class="timer-bar-button" id="stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>
-        <button class="timer-bar-out" id="out" disabled="true">00:00:00</button>
+        <button class="timer-bar-out" id="out" disabled="true"></button>
     </div>
     
     <div id="entry-display" class="entry-display-master">
