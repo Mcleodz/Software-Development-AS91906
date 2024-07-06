@@ -1,23 +1,2 @@
 [
-    {
-        "name": "Testing Dashboard Graphs",
-        "subject": "COMP 101",
-        "assignment": "AS91906",
-        "tag": "INTERNAL",
-        "duration": "218"
-    },
-    {
-        "name": "Testing Dashboard Graphs 2",
-        "subject": "ENGL 102",
-        "assignment": "AS91475",
-        "tag": "INTERNAL",
-        "duration": "459"
-    },
-    {
-        "name": "Testing Sashboard Graphs 3",
-        "subject": "PHYS 103",
-        "assignment": "AS91510",
-        "tag": "EXTERNAL",
-        "duration": "1392"
-    }
 ]

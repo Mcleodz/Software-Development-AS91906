@@ -1,5 +1,5 @@
 window.onload = function(){
-    generateSubjectDashboard();
+    generateDashboard('subject')
 }
 
 function toggleDiv(id) {
@@ -50,7 +50,7 @@ async function dashboardFilter(){
     const filterSelector = document.getElementById('dashboard-filter');
     if (filterSelector.value == "Subject"){
         filterSelector.value = "Dashboard Filter";
-        generateSubjectDashboard();
+        generateDashboard("subject");
         filterSelected();
     }
     if (filterSelector.value == "Assignment"){
@@ -78,7 +78,7 @@ async function dashboardFilter(){
     }
     if (filterSelector.value == "Tag"){
         filterSelector.value = "Dashboard Filter";
-        generateTagDashboard();
+        generateDashboard("tag");
         filterSelected();
     }
 }
@@ -96,7 +96,7 @@ function filterSelected(){
     let dashboardSelector = document.getElementById('dashboard-filter');
 
     if (dashboardSelector.value == 'Assignment'){
-        generateAssignmentDashboard(subjectChoice.value);
+        generateDashboard("assignment", subjectChoice.value);
         subjectChoice.value = 'Choose a Subject';
     }
     subjectChoice.style.display = 'none';
@@ -127,7 +127,7 @@ function clearDashboard() {
 
     let leftGraphTitle = document.createElement("p");
     leftGraphTitle.className = 'dashboard-slave-title-text';
-    leftGraphTitle.id = "left-graph-title";
+    leftGraphTitle.id = "graph-left-title";
     leftGraphTitle.style.color = "#4B4237";
     newGraphLeftMaster.appendChild(leftGraphTitle);
 
@@ -157,12 +157,10 @@ function clearDashboard() {
     newGraphMaster.appendChild(newGraphRightMaster);
 }
 
-async function generateSubjectDashboard(){
+async function generateDashboard(type, subject=''){
     // Resets previous dashboard
     clearDashboard();
 
-    document.title = 'Verso - Subject Dashboard';
-    document.getElementById('header').innerText = 'Dashboard - Subject';
     let dashboardMaster = document.getElementById('dashboard-master');
 
     // Colours to use
@@ -174,310 +172,122 @@ async function generateSubjectDashboard(){
         "total" : "#EDE7D9",
     }
 
-    let subjectTimesList = []
+    let timesList = [];
+    let requestAddress = '';
+    let timeRequestAddress = '';
+    let totalTime = 0;
+    let leftGraphTitle = '';
+
+    if (type == "subject"){
+        document.title = 'Verso - Subject Dashboard';
+        document.getElementById('header').innerText = 'Dashboard - Subject';
+        requestAddress = "/get/subjects";
+        timeRequestAddress = "/get/times/subject";
+        leftGraphTitle = "Total time breakdown by subject";
+    }
+
+    if(type == "assignment"){
+        document.title = 'Verso - Assignment Dashboard';
+        document.getElementById('header').innerText = 'Dashboard - Assignment';
+        requestAddress = "/get/assignments/" + subject;
+        timeRequestAddress = "/get/times/assignment/" + subject;
+        leftGraphTitle = 'Total time breakdown by assignment for ' + subject;
+    }
+
+    if(type == "tag"){
+        document.title = 'Verso - Tag Dashboard';
+        document.getElementById('header').innerText = 'Dashboard - Tag';
+        requestAddress = "/get/tags";
+        timeRequestAddress = "/get/times/tag";
+    }
 
     // Gets list of subjects from server
-    const response = await fetch("/get/subjects");
-    const subjects = await response.json();
+    const response = await fetch(requestAddress);
+    const responseObj = await response.json();
 
-    for (i=0; i < subjects.length; i++){
-        let currentSubject = subjects[i];
+    for (i=0; i < responseObj.length; i++){
+        let current = responseObj[i];
         
         // Gets time for current subject from server
-        const currentSubjectTimeResponse = await fetch(`/get/times/subject/${currentSubject}`);
-        const currentSubjectTime = await currentSubjectTimeResponse.text();
+        const currentTimeResponse = await fetch(timeRequestAddress + "/" + current);
+        const currentTime = await currentTimeResponse.text();
 
-        subjectTimesList.push(Number(currentSubjectTime));
+        timesList.push(Number(currentTime));
+        totalTime += Number(currentTime);
 
         // Creates Time Card for current subject
-        let newSubjectCard = document.createElement('div');
-        newSubjectCard.id = currentSubject;
-        newSubjectCard.className = 'dashboard-slave';
-        newSubjectCard.style.backgroundColor = colourDict[i];
+        let newCard = document.createElement('div');
+        newCard.id = current;
+        newCard.className = 'dashboard-slave';
+        newCard.style.backgroundColor = colourDict[i];
 
         // Creates title for current subject card
-        let newSubjectCardName = document.createElement('p');
-        newSubjectCardName.innerText = currentSubject;
-        newSubjectCardName.className = 'dashboard-slave-title-text';
+        let newCardName = document.createElement('p');
+        newCardName.innerText = current;
+        newCardName.className = 'dashboard-slave-title-text';
 
         // Creates total for current subject card
-        let newSubjectCardTotal = document.createElement('h3');
-        newSubjectCardTotal.style.fontWeight = 800;
-        newSubjectCardTotal.className = 'dashboard-slave-total-text';
-        newSubjectCardTotal.innerText = convertSeconds(currentSubjectTime);
+        let newCardTotal = document.createElement('h3');
+        newCardTotal.style.fontWeight = 800;
+        newCardTotal.className = 'dashboard-slave-total-text';
+        newCardTotal.innerText = convertSeconds(currentTime);
 
         // Displays current subject card
-        dashboardMaster.appendChild(newSubjectCard);
-        newSubjectCard.appendChild(newSubjectCardName);
-        newSubjectCard.appendChild(newSubjectCardTotal);
+        dashboardMaster.appendChild(newCard);
+        newCard.appendChild(newCardName);
+        newCard.appendChild(newCardTotal);
     }
 
-    // Gets total time for Total Time Card
-    const totalTimeResponse = await fetch('/get/times/total');
-    const totalTime = await totalTimeResponse.text()
-    console.log(Number(totalTime))
-    // Creates Total Time Card 
     let totalCard = document.createElement('div');
-    totalCard.id = "total";
+    totalCard.id = 'total';
     totalCard.className = 'dashboard-slave';
     totalCard.style.backgroundColor = colourDict.total;
-    totalCard.style.color = "#4B4237";
+    totalCard.style.color = "#4B4237"
 
-    // Creates Title for Total Time Card
+    // Creates title for current subject card
     let totalCardName = document.createElement('p');
     totalCardName.innerText = "Total";
     totalCardName.className = 'dashboard-slave-title-text';
 
-    // Creates Time text for Total Time Card
+    // Creates total for current subject card
     let totalCardTotal = document.createElement('h3');
-    totalCardTotal.innerText = convertSeconds(totalTime);
-    totalCardTotal.className = 'dashboard-slave-total-text';
     totalCardTotal.style.fontWeight = 800;
-
-    // Displays Total Card Text
-    dashboardMaster.appendChild(totalCard);
-    totalCard.appendChild(totalCardName);
-    totalCard.appendChild(totalCardTotal);
-
-    // Resets Filter Div
-    toggleDiv('filter-master');
-
-    let graphTitle = `Time breakdown by Subject`;
-
-    generateLeftGraph(graphTitle, subjects, subjectTimesList, totalTime);
-    generateRightGraph(graphTitle, subjects, subjectTimesList, totalTime);
-}
-
-async function generateAssignmentDashboard(subject){
-
-    // Resets previous dashboard
-    clearDashboard()
-    document.title = `Verso - Assignment Dashboard for ${subject}`;
-    document.getElementById('header').innerText = `Dashboard - ${subject}'s Assignments`;
-    let dashboardMaster = document.getElementById('dashboard-master');
-
-    // Colours to use
-    const colourDict = {
-        "0" : "#8A3324",
-        "1" : "#D5A021",
-        "2" : "#d15d24",
-        "3" : "#A49694",
-        "total" : "#EDE7D9",
-    }
-
-    // Gets list of Assignments from server
-    const response = await fetch(`/get/assignments/${subject}`);
-    const assignments = await response.json();
-
-    let assignmentTimesList = [];
-
-    for (i=0; i < assignments.length; i++){
-        let currentAssignment = assignments[i];
-        
-        // Gets time for current Assignment from server
-        const currentAssignmentTimeResponse = await fetch(`/get/times/assignment/${subject}/${currentAssignment}`);
-        const currentAssignmentTime = await currentAssignmentTimeResponse.text();
-        assignmentTimesList.push(currentAssignmentTime);
-        
-        // Creates Time Card for Assignment subject
-        let newAssignmentCard = document.createElement('div');
-        newAssignmentCard.id = currentAssignment;
-        newAssignmentCard.className = 'dashboard-slave';
-        newAssignmentCard.style.backgroundColor = colourDict[i];
-
-        // Creates title for current Assignment card
-        let newAssignmentCardName = document.createElement('p');
-        newAssignmentCardName.innerText = currentAssignment;
-        newAssignmentCardName.className = 'dashboard-slave-title-text';
-
-        // Creates total for current Assignment card
-        let newAssignmentCardTotal = document.createElement('h3');
-        newAssignmentCardTotal.style.fontWeight = 800;
-        newAssignmentCardTotal.className = 'dashboard-slave-total-text';
-        newAssignmentCardTotal.innerText = convertSeconds(currentAssignmentTime);
-
-        // Displays current Assignment card
-        dashboardMaster.appendChild(newAssignmentCard);
-        newAssignmentCard.appendChild(newAssignmentCardName);
-        newAssignmentCard.appendChild(newAssignmentCardTotal);
-    }
-
-    // Gets total time for Total Time Card
-    const totalTimeResponse = await fetch(`/get/times/subject/${subject}`);
-    const totalTime = await totalTimeResponse.text()
-
-    // Creates Total Time Card 
-    let totalCard = document.createElement('div');
-    totalCard.id = "total";
-    totalCard.className = 'dashboard-slave';
-    totalCard.style.backgroundColor = colourDict.total;
-    totalCard.style.color = "#4B4237";
-
-    // Creates Title for Total Time Card
-    let totalCardName = document.createElement('p');
-    totalCardName.innerText = "Total";
-    totalCardName.className = 'dashboard-slave-title-text';
-
-    // Creates Time text for Total Time Card
-    let totalCardTotal = document.createElement('h3');
-    totalCardTotal.innerText = convertSeconds(totalTime);
     totalCardTotal.className = 'dashboard-slave-total-text';
-    totalCardTotal.style.fontWeight = 800;
-
-    // Displays Total Card Text
-    dashboardMaster.appendChild(totalCard);
-    totalCard.appendChild(totalCardName);
-    totalCard.appendChild(totalCardTotal);
-
-    // Resets Filter Div
-    toggleDiv('filter-master');
-
-    let graphTitle = `Time breakdown by assignment for ${subject}`;
-
-    generateLeftGraph(graphTitle, assignments, assignmentTimesList, totalTime);
-    generateRightGraph(graphTitle, assignments, assignmentTimesList, totalTime);
-}
-
-async function generateTagDashboard(){
-
-    // Resets previous dashboard
-    clearDashboard()
-    document.title = `Verso - Tag Dashboard`;
-    document.getElementById('header').innerText = `Dashboard - Tags`;
-    let dashboardMaster = document.getElementById('dashboard-master');
-
-    // Colours to use
-    const colourDict = {
-        "0" : "#8A3324",
-        "1" : "#D5A021",
-        "2" : "#d15d24",
-        "3" : "#A49694",
-        "total" : "#EDE7D9",
-    }
-
-    // Gets list of Assignments from server
-    const response = await fetch(`/get/tags`);
-    const tags = await response.json();
-    let tagTimesList = [];
-
-    for (i=0; i < tags.length; i++){
-        let currentTag = tags[i];
-        
-        // Gets time for current Assignment from server
-        const currentTagTimeResponse = await fetch(`/get/times/tag/${currentTag}`);
-        const currentTagTime = await currentTagTimeResponse.text();
-        tagTimesList.push(currentTagTime);
-
-        // Creates Time Card for Assignment subject
-        let newTagCard = document.createElement('div');
-        newTagCard.id = currentTag;
-        newTagCard.className = 'dashboard-slave';
-        newTagCard.style.backgroundColor = colourDict[i];
-
-        // Creates title for current Assignment card
-        let newTagCardName = document.createElement('p');
-        newTagCardName.innerText = currentTag;
-        newTagCardName.className = 'dashboard-slave-title-text';
-
-        // Creates total for current Assignment card
-        let newTagCardTotal = document.createElement('h3');
-        newTagCardTotal.style.fontWeight = 800;
-        newTagCardTotal.className = 'dashboard-slave-total-text';
-        newTagCardTotal.innerText = convertSeconds(currentTagTime);
-
-        // Displays current Assignment card
-        dashboardMaster.appendChild(newTagCard);
-        newTagCard.appendChild(newTagCardName);
-        newTagCard.appendChild(newTagCardTotal);
-    }
-
-    // Gets total time for Total Time Card
-    const totalTimeResponse = await fetch(`/get/times/total`);
-    const totalTime = await totalTimeResponse.text()
-
-    // Creates Total Time Card 
-    let totalCard = document.createElement('div');
-    totalCard.id = "total";
-    totalCard.className = 'dashboard-slave';
-    totalCard.style.backgroundColor = colourDict.total;
-    totalCard.style.color = "#4B4237";
-
-    // Creates Title for Total Time Card
-    let totalCardName = document.createElement('p');
-    totalCardName.innerText = "Total";
-    totalCardName.className = 'dashboard-slave-title-text';
-
-    // Creates Time text for Total Time Card
-    let totalCardTotal = document.createElement('h3');
     totalCardTotal.innerText = convertSeconds(totalTime);
-    totalCardTotal.className = 'dashboard-slave-total-text';
-    totalCardTotal.style.fontWeight = 800;
-
-    // Displays Total Card Text
-    dashboardMaster.appendChild(totalCard);
-    totalCard.appendChild(totalCardName);
-    totalCard.appendChild(totalCardTotal);
-
-    // Resets Filter Div
-    toggleDiv('filter-master');
-
-    let graphTitle = `Time breakdown by Tag`;
-
-    generateLeftGraph(graphTitle, tags, tagTimesList, totalTime);
-    generateRightGraph(graphTitle, tags, tagTimesList, totalTime);
-} 
-
-function generateLeftGraph(title, labels, times, totalTime){
-    const leftGraphTitle = document.getElementById('left-graph-title');
-    leftGraphTitle.innerHTML = title;
     
-    let timesListasPercent = [];
+    // Displays current subject card
+    dashboardMaster.appendChild(totalCard);
+    totalCard.appendChild(totalCardName);
+    totalCard.appendChild(totalCardTotal);
+
+    // Resets Filter Div
+    toggleDiv('filter-master');
+
+    generateGraph("Total time breakdown by subject", responseObj, timesList, totalTime, "graph-left");
+}
+
+function generateGraph(title, labels, times, totalTime, graphID){
+    const graph = document.getElementById(graphID+"-title");
+    graph.innerHTML = title;
+    
+    let timeDisplay = [];
 
     for(i=0; i < times.length; i++){
         let currentTime = ((times[i] / totalTime)*100).toFixed();
-        timesListasPercent.push(currentTime);
+        timeDisplay.push(currentTime);
     }
 
-    new Chart("graph-left", {
+    new Chart(graphID, {
         type: "doughnut",
         data: {
             labels: labels,
             datasets: [{
-            backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
-            data: timesListasPercent,
+                backgroundColor: ["#8A3324","#D5A021","#d15d24","#A49694"],
+                data: timeDisplay
             }]
         },
         options: {
-            title: {
-            display: true,
-            text: ""},
-        }
-    });
-}
-
-function generateRightGraph(title, labels, times, totalTime){
-    const rightGraphTitle = document.getElementById('right-graph-title');
-    rightGraphTitle.innerHTML = title;
-
-    let timesListasPercent = [];
-
-    for(i=0; i < times.length; i++){
-        let currentTime = ((times[i] / totalTime)*100).toFixed();
-        timesListasPercent.push(currentTime);
-    }
-
-    new Chart("graph-right", {
-        type: "doughnut",
-        data: {
-            labels: labels,
-            datasets: [{
-            backgroundColor: ["#8A3324", "#D5A021", "#d15d24", "#A49694"],
-            data: timesListasPercent}]
-        },
-        options: {
-            title: {
-            display: true,
-            text: ""},
+            legend: false,
         }
     });
 }
