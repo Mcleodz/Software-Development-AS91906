@@ -1,13 +1,27 @@
+
+/**
+ * 
+ * Generates Subject Dashboard as Default Dashboard
+ */
 window.onload = function(){
     generateDashboard('subject')
 }
 
+/**
+ * 
+ * @param {String} id DOM ID of Div to toggle
+ */
 function toggleDiv(id) {
     let div = document.getElementById(id);
     div.style.display = div.style.display == "none" ? "block" : "none";
 
 }
 
+/**
+ * 
+ * @param {Number} duration Amount of time in seconds
+ * @returns {String} formatted to be displayed to user
+ */
 function convertSeconds(duration){
     // Variable declarations
     let hours = Math.floor(duration / 3600);
@@ -83,6 +97,10 @@ async function dashboardFilter(){
     }
 }
 
+/**
+ * 
+ * @yields Removes any option tag with class 'generated-option'
+ */
 function clearOptions() {
     let options = document.getElementsByClassName('generated-option');
 
@@ -104,6 +122,10 @@ function filterSelected(){
     document.getElementById('filter-master').style.marginLeft = '45%';
 }
 
+/**
+ * 
+ * @returns Blank Dashboard with required DOM Elements regenerated
+ */
 function clearDashboard() {
     let body = document.body
 
@@ -157,6 +179,48 @@ function clearDashboard() {
     newGraphMaster.appendChild(newGraphRightMaster);
 }
 
+/**
+ * 
+ * @param {String} title String indicating the Graph Title 
+ * @param {Array} labels Array containing subject/tag/assignment names
+ * @param {Array} times Array containing times for each subject/tag/assignment (should be ordered to match labels)
+ * @param {Number} totalTime Total of Times used to calculate percentage values 
+ * @param {String} graphID DOM ID for graph to be generated from
+ * @returns Chart.JS doughnut chart
+ */
+function generateGraph(title, labels, times, totalTime, graphID){
+    const graph = document.getElementById(graphID+"-title");
+    graph.innerHTML = title;
+    
+    let timeDisplay = [];
+
+    for(i=0; i < times.length; i++){
+        let currentTime = ((times[i] / totalTime)*100).toFixed();
+        timeDisplay.push(currentTime);
+    }
+
+    new Chart(graphID, {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+                backgroundColor: ["#8A3324","#D5A021","#d15d24","#A49694"],
+                data: timeDisplay
+            }]
+        },
+        options: {
+            legend: false,
+        }
+    });
+}
+
+/**
+ * 
+ * @param {String} type String indicating type of dashboard to generate
+ * @param {String} subject Optional parameter used to specify a subject for an assignment dashboard
+ * 
+ * Generates a Dashboard of given type with data from entries.json
+ */
 async function generateDashboard(type, subject=''){
     // Resets previous dashboard
     clearDashboard();
@@ -172,11 +236,13 @@ async function generateDashboard(type, subject=''){
         "total" : "#EDE7D9",
     }
 
+    // List of times for totals Doughnut Chart
     let timesList = [];
+    let totalTime = 0
+
+    // Declaring Request Addresses
     let requestAddress = '';
     let timeRequestAddress = '';
-    let totalTime = 0;
-    let leftGraphTitle = '';
 
     if (type == "subject"){
         document.title = 'Verso - Subject Dashboard';
@@ -212,7 +278,10 @@ async function generateDashboard(type, subject=''){
         const currentTimeResponse = await fetch(timeRequestAddress + "/" + current);
         const currentTime = await currentTimeResponse.text();
 
+        // Current Time Added to Times List for Graphs
         timesList.push(Number(currentTime));
+
+        // Current Time Added to Total Time
         totalTime += Number(currentTime);
 
         // Creates Time Card for current subject
@@ -238,6 +307,7 @@ async function generateDashboard(type, subject=''){
         newCard.appendChild(newCardTotal);
     }
 
+    // Total Card is made
     let totalCard = document.createElement('div');
     totalCard.id = 'total';
     totalCard.className = 'dashboard-slave';
@@ -263,31 +333,6 @@ async function generateDashboard(type, subject=''){
     // Resets Filter Div
     toggleDiv('filter-master');
 
-    generateGraph("Total time breakdown by subject", responseObj, timesList, totalTime, "graph-left");
-}
-
-function generateGraph(title, labels, times, totalTime, graphID){
-    const graph = document.getElementById(graphID+"-title");
-    graph.innerHTML = title;
-    
-    let timeDisplay = [];
-
-    for(i=0; i < times.length; i++){
-        let currentTime = ((times[i] / totalTime)*100).toFixed();
-        timeDisplay.push(currentTime);
-    }
-
-    new Chart(graphID, {
-        type: "doughnut",
-        data: {
-            labels: labels,
-            datasets: [{
-                backgroundColor: ["#8A3324","#D5A021","#d15d24","#A49694"],
-                data: timeDisplay
-            }]
-        },
-        options: {
-            legend: false,
-        }
-    });
+    // Generate left graph 
+    generateGraph("Total time breakdown by subject (%)", responseObj, timesList, totalTime, "graph-left");
 }
