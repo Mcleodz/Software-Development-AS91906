@@ -1,2 +1,44 @@
 [
+    {
+        "name": "Goal Managing",
+        "subject": "Digital Science",
+        "assignment": "AS91906",
+        "tag": "Internal",
+        "duration": "360"
+    },
+    {
+        "name": "Working on graphs",
+        "subject": "Digital Science",
+        "assignment": "AS91906",
+        "tag": "Internal",
+        "duration": "840"
+    },
+    {
+        "name": "Working on Goals",
+        "subject": "Digital Science",
+        "assignment": "AS91906",
+        "tag": "Internal",
+        "duration": "5732"
+    },
+    {
+        "name": "Working on Website",
+        "subject": "Electronics",
+        "assignment": "AS91904",
+        "tag": "Internal",
+        "duration": "7361"
+    },
+    {
+        "name": "Mechanics Revision",
+        "subject": "Physics",
+        "assignment": "AS91524",
+        "tag": "External",
+        "duration": "3792"
+    },
+    {
+        "name": "Differentiation Revision",
+        "subject": "Calculus",
+        "assignment": "AS91578",
+        "tag": "External",
+        "duration": "7461"
+    }
 ]

@@ -1,11 +1,10 @@
 window.onload = function(){
-    generateDashboard('subject')
+    generateDashboard('subject');
 }
 
 function toggleDiv(id) {
     let div = document.getElementById(id);
     div.style.display = div.style.display == "none" ? "block" : "none";
-
 }
 
 function convertSeconds(duration){
@@ -140,7 +139,7 @@ function clearDashboard() {
 
     let rightGraphTitle = document.createElement("p");
     rightGraphTitle.className = 'dashboard-slave-title-text';
-    rightGraphTitle.id = "right-graph-title";
+    rightGraphTitle.id = "graph-right-title";
     rightGraphTitle.style.color = "#4B4237";
     newGraphRightMaster.appendChild(rightGraphTitle);
 
@@ -177,6 +176,7 @@ async function generateDashboard(type, subject=''){
     let timeRequestAddress = '';
     let totalTime = 0;
     let leftGraphTitle = '';
+    let goalTimes = [];
 
     if (type == "subject"){
         document.title = 'Verso - Subject Dashboard';
@@ -184,6 +184,18 @@ async function generateDashboard(type, subject=''){
         requestAddress = "/get/subjects";
         timeRequestAddress = "/get/times/subject";
         leftGraphTitle = "Total time breakdown by subject";
+
+        // Gets list of goals from server
+        const goalsResponse = await fetch('/get/goals/subjects');
+        const goalsResponseObj = await goalsResponse.json();
+
+        // Get goal times
+        for (i=0; i<goalsResponseObj.length; i++){
+            const goalsTimeResponse = await fetch('/get/times/goals/subjects/' + goalsResponseObj[i]);
+            const goalsTimeResponseObj = await goalsTimeResponse.text();
+            console.log(Number(goalsTimeResponseObj))
+            goalTimes.push(Number(goalsTimeResponseObj))
+        }
     }
 
     if(type == "assignment"){
@@ -199,6 +211,7 @@ async function generateDashboard(type, subject=''){
         document.getElementById('header').innerText = 'Dashboard - Tag';
         requestAddress = "/get/tags";
         timeRequestAddress = "/get/times/tag";
+        leftGraphTitle = "Total time breakdown by tag";
     }
 
     // Gets list of subjects from server
@@ -263,7 +276,8 @@ async function generateDashboard(type, subject=''){
     // Resets Filter Div
     toggleDiv('filter-master');
 
-    generateGraph("Total time breakdown by subject", responseObj, timesList, totalTime, "graph-left");
+    generateGraph("Total time breakdown by subject (%)", responseObj, timesList, totalTime, "graph-left");
+    generateBarGraph("Progression towards goal (%)", responseObj, timesList, goalTimes, "graph-right");
 }
 
 function generateGraph(title, labels, times, totalTime, graphID){
@@ -288,6 +302,39 @@ function generateGraph(title, labels, times, totalTime, graphID){
         },
         options: {
             legend: false,
+        }
+    });
+}
+
+function generateBarGraph(title, labels, times, goalTimes, graphID){
+    const graph = document.getElementById(graphID+"-title");
+    graph.innerHTML = title;
+    
+    let timeDisplay = [];
+
+    for(i=0; i < times.length; i++){
+        let currentTime = (((times[i]/3600)/(goalTimes[i]/3600))*100).toFixed(0);
+        timeDisplay.push(currentTime);
+    }
+
+    new Chart(graphID, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                backgroundColor: ["#8A3324","#D5A021","#d15d24","#A49694"],
+                data: timeDisplay
+            }]
+        },
+        options: {
+            legend: false,
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
 }

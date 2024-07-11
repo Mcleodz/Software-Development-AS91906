@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="/styles"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <script src="/goals/script"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>
+        Verso - Goal Manager
+    </title>
+</head>
+
+<body>
+    <div class="sidenav">
+        <h1 class="page-name">
+            Verso
+        </h1>
+        <a href="/timer" class="sidenav-option" ><span class="material-symbols-outlined">timer</span> Timer</a>
+        <a href="/dashboard" class="sidenav-option"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="/goals" class="sidenav-option"><span class="material-symbols-outlined">target</span> Goal Manager</a>
+    </div>
+
+    <div class="header-master" id="header-master">
+        <h1 id="header" class="header-slave">
+            Goal Manager    
+        </h1>
+    </div>
+
+    <div class="goal-master" id="goal-master">
+    </div>
+
+    <div class="goal-creator-master" id="goal-creator-master">
+        <button class="goal-creator-slave" id="new-goal-button" onclick="toggleDiv('new-goal-master')">Create Goal</button>
+        <button class="goal-creator-slave" id="remove-goal-button" onclick="toggleDiv('remove-goal-master')">Remove Goal</button>
+        <button class="goal-creator-slave" id="edit-goal-button" onclick="toggleDiv('edit-goal-master')">Edit Goal</button>
+    </div>
+
+    <div class="goal-creator-master" id="new-goal-master" style="display:none;">
+        <select class="goal-creator-slave" id="new-goal-list">
+            <option selected disabled value="goal">Subject</option>
+        </select>
+        <input type="number" class="goal-creator-slave" id="new-goal-duration" style="height:3rem; width: 26.5%;" placeholder="New goal length">
+        <button class="goal-creator-slave" id="new-goal-confirm" onclick="createGoal()">Set Goal</button>
+    </div>
+
+    <div class="goal-creator-master" id="remove-goal-master" style="display:none;">
+        <select class="goal-creator-slave" id="remove-goal-list" style="width:41%">
+            <option selected disabled value="goal">Goal</option>
+        </select>
+        <button class="goal-creator-slave" id="remove-goal-confirm" style="width:41%" onclick="removeGoal()">Remove Goal</button>
+    </div>
+
+    <div class="goal-creator-master" id="edit-goal-master" style="display:none;">
+        <select class="goal-creator-slave" id="edit-goal-list">
+            <option selected disabled value="goal">Goal</option>
+        </select>
+        <input type="number" class="goal-creator-slave" id="edit-goal-duration" style="height:3rem; width: 26.5%;" placeholder="Updated Duration">
+        <button class="goal-creator-slave" id="edit-goal-confirm" onclick="editGoal()">Update Goal</button>
+    </div>
+</body>
