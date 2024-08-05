@@ -39,6 +39,32 @@
         </select>
     </div>
 
+    <div class="goal-popup" id="new-goal-menu" style="display: none;">
+        <select class="goal-subject-select" id="new-goal-select">
+            <option selected disabled value="none-selected">Subject?</option>
+        </select>
+        <input class="goal-length-input" id="new-goal-length" placeholder="Duration? (hrs)" type="number">
+        <button class="escape" onclick="toggleDiv('new-goal-menu')">x</button>
+        <button class="goal-management-submission" onclick="createNewGoal()">Create Goal</button>
+    </div>
+
+    <div class="goal-popup" id="edit-goal-menu" style="display: none;">
+        <select class="goal-subject-select" id="edit-goal-select">
+            <option selected disabled value="none-selected">Subject?</option>
+        </select>
+        <input class="goal-length-input" id="updated-goal-length" placeholder="New Duration? (hrs)" type="number";>
+        <button class="escape" onclick="toggleDiv('edit-goal-menu')">x</button>
+        <button class="goal-management-submission" onclick="editGoal()">Update Goal</button>
+    </div>
+
+    <div class="goal-popup" id="remove-goal-menu" style="display: none;">
+        <select class="goal-subject-select" id="remove-goal-select" style="width: 90%;">
+            <option selected disabled value="none-selected">Goal?</option>
+        </select>
+        <button class="escape" onclick="toggleDiv('remove-goal-menu')">x</button>
+        <button class="goal-management-submission" onclick="removeGoal()">Remove Goal</button>
+    </div>
+
     <div class="dashboard-master" id="dashboard-master">
         <!-- Generated Dashboard Cards Are Displayed Here-->
     </div>
@@ -53,7 +79,12 @@
         </div>
     </div>
 
-    <div>
-        
+    <div class="goal-title" id="goal-title">
+    </div>
+    <div class="goal-master" id="goal-master">
+        <!-- Generated Goal Cards Are Displayed Here-->
+    </div>
+    <div class="goal-options" id="goal-options">
+        <!-- Generated Goal Cards Are Displayed Here-->
     </div>
 </body>

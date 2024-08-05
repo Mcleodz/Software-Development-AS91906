@@ -33,28 +33,34 @@ window.onload = async function() {
 }
 
 /**
- * Saves current timer duration (if greater than 0 seconds), and current UNIX time to server
- * to ensure timer can continue running when page is reloaded
- * @async
+ * 
+ * @param {String} id DOM ID of Div to toggle
  */
-window.onpagehide = async function() {
-  // If timer is running while the page is hidden, Tell server current UNIX time and duration on timer
-  if (count > 0){
-    const TIMEOFPAUSE = new Date;
-    const TIMEOFPAUSEPROCESSED = TIMEOFPAUSE.getTime();
-
-    fetch("/pause", {
-      method:"POST",
-      body: JSON.stringify({
-        unixtimeonpause: TIMEOFPAUSEPROCESSED,
-        durationonpause: count
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    });
+function toggleDiv(id) {
+  if(id == "new-subject-menu"){
+    if(document.getElementById('subject').value == 'new'){
+      let div = document.getElementById(id);
+      div.style.display = div.style.display == "none" ? "block" : "none";
+    }
   }
-}
+  else if(id == "new-assignment-menu"){
+    if(document.getElementById('assignment').value == 'new'){
+      let div = document.getElementById(id);
+      div.style.display = div.style.display == "none" ? "block" : "none";
+    }
+  }
+  else if(id == "new-tag-menu"){
+    if(document.getElementById('tag').value == 'new'){
+      let div = document.getElementById(id);
+      div.style.display = div.style.display == "none" ? "block" : "none";
+    }
+  }
+  else{
+    let div = document.getElementById(id);
+    div.style.display = div.style.display == "none" ? "block" : "none";
+  }
+
+};
 
 /**
  * @async
@@ -203,6 +209,7 @@ function displayEntry(entryDataJson){
  * @yields Subject Options Displayed
  */
 async function showSubjectOptions(){
+  clearGeneratedOptions('created-subject');
 
   //Get list of subjects from Server
   const subjectSelector = document.getElementById('subject');
@@ -214,6 +221,7 @@ async function showSubjectOptions(){
       let newOption = document.createElement("option");
       newOption.value = subjectList[i];
       newOption.innerText = subjectList[i];
+      newOption.className = 'created-subject';
       subjectSelector.appendChild(newOption);
   }
   
@@ -221,6 +229,7 @@ async function showSubjectOptions(){
     let newSubjectOption = document.createElement("option");
     newSubjectOption.value = 'new';
     newSubjectOption.innerText = '+';
+    newSubjectOption.className = 'created-subject';
     subjectSelector.appendChild(newSubjectOption);
 }
 
@@ -230,6 +239,7 @@ async function showSubjectOptions(){
  * @yields Tag Options Displayed
  */
 async function showTagOptions(){
+  clearGeneratedOptions('created-tag');
   
   // Get list of tags from server
   const tagSelector = document.getElementById('tag');
@@ -241,12 +251,14 @@ async function showTagOptions(){
       let newOption = document.createElement("option");
       newOption.value = tagList[i];
       newOption.innerText = tagList[i];
+      newOption.className = 'created-tag';
       tagSelector.appendChild(newOption);
   }
   // Generating New Assignment Option
   let newTagOption = document.createElement("option");
   newTagOption.value = 'new';
   newTagOption.innerText = '+';
+  newTagOption.className = 'created-tag';
   tagSelector.appendChild(newTagOption);
 }
 
@@ -258,7 +270,7 @@ async function showTagOptions(){
 async function showAssignmentOptions(){
 
   // Clear any previously generated options
-  clearGeneratedOptions()
+  clearGeneratedOptions('created-assignment');
 
   const assignmentSelector = document.getElementById('assignment');
   const subjectSelector = document.getElementById('subject');
@@ -272,44 +284,110 @@ async function showAssignmentOptions(){
       let newOption = document.createElement("option");
       newOption.value = assignmentList[i];
       newOption.innerText = assignmentList[i];
-      newOption.className = 'created';
-      console.log(newOption.className);
+      newOption.className = 'created-assignment';
       assignmentSelector.appendChild(newOption);
   }
   // Generating New Assignment Option
   let newAssignmentOption = document.createElement("option");
   newAssignmentOption.value = 'new';
   newAssignmentOption.innerText = '+';
-  newAssignmentOption.className = 'created';
-  console.log(newAssignmentOption.className)
+  newAssignmentOption.className = 'created-assignment';
   assignmentSelector.appendChild(newAssignmentOption);
-}
-
-/**
- * 
- * @param {String} id DOM ID of selector
- * @yields <select> is replaced by <input>
- */
-function createNewOption(id){
-  const selector = document.getElementById(id);
-  const selectorInput = document.getElementById(`${id}-input`);
-
-  if (selector.value == "new"){
-      selector.remove();
-      selectorInput.style.display="block";
-      selectorInput.id = id;
-  }
 }
 
 /**
  * 
  * @yields Removes any option with Class Name of 'created'
  */
-function clearGeneratedOptions(){
+function clearGeneratedOptions(className){
   // clear any existing options that have been generated by program
-  let generatedOptionsList = document.getElementsByClassName('created');
+  let generatedOptionsList = document.getElementsByClassName(className);
 
   while (generatedOptionsList.length > 0){
     generatedOptionsList[0].remove()
   }
+}
+
+function newSubject(){
+  let subjectName = document.getElementById('new-subject-name').value;
+  let subjectColour = document.getElementById('new-subject-colour').value;
+
+  let newSubjectData = {
+    name:subjectName,
+    colour:subjectColour
+  }
+
+  fetch("/post/newSubject", {
+    method: "POST",
+    body: JSON.stringify(newSubjectData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+
+  subjectName = '';
+  subjectColour = '';
+  toggleDiv('new-subject-menu');
+
+  showSubjectOptions();
+
+  document.getElementById('subject').value = 'subject';
+}
+
+function newTag(){
+  let tagName = document.getElementById('new-tag-name').value;
+  let tagColour = document.getElementById('new-tag-colour').value;
+
+  let newTagData = {
+    name:tagName,
+    colour:tagColour
+  }
+
+  console.log(newTagData);
+
+  fetch("/post/newTag", {
+    method: "POST",
+    body: JSON.stringify(newTagData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+
+  tagName = '';
+  tagColour = '';
+  toggleDiv('new-tag-menu');
+
+  showTagOptions();
+
+  document.getElementById('tag').value = 'tag';
+}
+
+function newAssignment(){
+  let assignmentName = document.getElementById('new-assignment-name').value;
+  let assignmentColour = document.getElementById('new-assignment-colour').value;
+  const subject = document.getElementById('subject').value;
+
+  console.log(assignmentName, assignmentColour, subject)
+
+  let newAssignmentData = {
+    name:assignmentName,
+    colour:assignmentColour,
+    subject:subject
+  }
+
+  fetch("/post/newAssignment", {
+    method: "POST",
+    body: JSON.stringify(newAssignmentData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  });
+
+  assignmentName = '';
+  assignmentColour = '';
+  toggleDiv('new-assignment-menu');
+
+  showAssignmentOptions();
+
+  document.getElementById('assignment').value = 'assignment';
 }
