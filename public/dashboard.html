@@ -28,15 +28,17 @@
     </div>
 
     <div class="filter-master" id="filter-master">
-        <select class="filter-slave" id="dashboard-filter" onchange="dashboardFilter()">
-            <option selected disabled>Dashboard Filter</option>
-            <option value="Subject">Filter by Subject</option>
-            <option value="Assignment">Filter by Assignment</option>
-            <option value="Tag">Fitler by Tag</option>
-        </select>
-        <select class="filter-slave" id="subject-choice" onchange="filterSelected()" style="display:none;">
-            <option selected disabled>Choose a Subject</option>
-        </select>
+        <div>
+            <select class="filter-slave" id="dashboard-filter" onchange="dashboardFilter()">
+                <option selected disabled>Dashboard Filter</option>
+                <option value="Subject">Filter by Subject</option>
+                <option value="Assignment">Filter by Assignment</option>
+                <option value="Tag">Fitler by Tag</option>
+            </select>
+            <select class="filter-slave" id="subject-choice" onchange="filterSelected()" style="display:none;">
+                <option selected disabled>Choose a Subject</option>
+            </select>    
+        </div>
     </div>
 
     <div class="goal-popup" id="new-goal-menu" style="display: none;">
