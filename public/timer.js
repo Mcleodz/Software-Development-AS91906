@@ -2,33 +2,44 @@
  *
  * Gets saved time from server to continue timing where left off.
  */
-window.onload = async function () {
+window.onload = function () {
   // Declaring Time Display and Play/Pause Button
   output = document.getElementById("out");
   playpause = document.getElementById("play");
+  count = 0;
+
+  // Declaring Picture-in-Picture elements
+  pipOut = document.getElementById("picture-in-picture-out");
+  pipPlayPause = document.getElementById("picture-in-picture-play-pause");
 
   // Generate Static Options
   showSubjectOptions();
   showTagOptions();
+  displayPreviousEntries();
 
-  // Ask Server if Timer is already running
-  let response = await fetch("/resume");
-  let existingData = await response.json();
+  output.innerHTML = "00:00:00";
+  pipOut.innerHTML = "00:00:00";
+};
 
-  // if Timer is already running add existing time and duration together
-  count = Number(existingData.count) + existingData.duration;
-
-  timer = null;
-
-  // If timer is already running, start timer
-  if (existingData.duration > 0) {
-    startTimer();
+/**
+ *
+ * @returns notify user that if they proceed, time entry data may be lost.
+ */
+window.onbeforeunload = function () {
+  if (count > 0) {
+    return "unsaved time entry";
   }
+};
 
-  // If timer is not already running, show default formatted time
-  else {
-    output.innerHTML = "00:00:00";
+/**
+ *
+ * @returns saves time entry when page is unloaded
+ */
+window.onunload = function () {
+  if (count > 0) {
+    stopTimer();
   }
+  return "saved";
 };
 
 /**
@@ -62,6 +73,7 @@ function toggleDiv(id) {
  * @returns Time counting up displayed in 'output' element
  */
 async function startTimer() {
+  // Get values of entry name, subject, and assignment for validation
   let name = document.getElementById("timer").value;
   let subject = document.getElementById("subject").value;
   let assignment = document.getElementById("assignment").value;
@@ -70,17 +82,31 @@ async function startTimer() {
     if (timer) {
       clearInterval(timer);
       timer = null;
+
+      // Change Timer Start button to a play symbol
       playpause.innerHTML =
+        '<span class="material-symbols-outlined">play_arrow</span>';
+      pipPlayPause.innerHTML =
         '<span class="material-symbols-outlined">play_arrow</span>';
       return;
     }
+
+    // Change Timer Start button to a pause symbol
     playpause.innerHTML =
       '<span class="material-symbols-outlined">pause</span>';
+    pipPlayPause.innerHTML =
+      '<span class="material-symbols-outlined">pause</span>';
+
     timer = window.setInterval(function () {
       count++;
       seconds = count.toFixed(0);
+
+      // Update document title to show current time
       document.title = `Verso - Timer (${convertSeconds(seconds)})`;
+
+      // Update both outputs to show current time
       output.innerHTML = convertSeconds(seconds);
+      pipOut.innerHTML = convertSeconds(seconds);
     }, 1000);
   } else {
     alert("Please ensure all fields are filled out");
@@ -91,70 +117,73 @@ async function startTimer() {
  * Creates a new entry from input field data
  */
 function stopTimer() {
-  // Declaration of variables
-  let name = document.getElementById("timer").value;
-  let subject = document.getElementById("subject").value;
-  let assignment = document.getElementById("assignment").value;
-  let tag = document.getElementById("tag").value;
-  let length = count.toFixed(0);
+  if (count > 0) {
+    // Declaration of variables
+    let name = document.getElementById("timer").value;
+    let subject = document.getElementById("subject").value;
+    let assignment = document.getElementById("assignment").value;
+    let tag = document.getElementById("tag").value;
+    let length = count.toFixed(0);
 
-  // Converts entry length to be displayed to user
-  let seconds = convertSeconds(length);
+    // Converts entry length to be displayed to user
+    let seconds = convertSeconds(length);
 
-  // Reset Page Title.
-  document.title = "Verso - Timer";
+    // Reset Page Title.
+    document.title = "Verso - Timer";
 
-  // Format Time Data to save into json file
-  const entryData = JSON.stringify({
-    name: name,
-    subject: subject,
-    assignment: assignment,
-    tag: tag,
-    duration: length,
-  });
+    // Format Time Data to save into json file
+    const entryData = JSON.stringify({
+      name: name,
+      subject: subject,
+      assignment: assignment,
+      tag: tag,
+      duration: length,
+    });
 
-  // Format Entry data to display to user
-  const displayEntryData = JSON.stringify({
-    name: name,
-    subject: subject,
-    assignment: assignment,
-    tag: tag,
-    duration: seconds,
-  });
+    // Format Entry data to display to user
+    const displayEntryData = JSON.stringify({
+      name: name,
+      subject: subject,
+      assignment: assignment,
+      tag: tag,
+      duration: seconds,
+    });
 
-  // Send entry data to Server to save in json file
-  fetch("/post/newEntry", {
-    method: "POST",
-    body: entryData,
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    // Send entry data to Server to save in json file
+    fetch("/post/newEntry", {
+      method: "POST",
+      body: entryData,
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  // Reset serverside time to 0
-  fetch("/pause", {
-    method: "POST",
-    body: JSON.stringify({
-      unixtimeonpause: 0,
-      durationonpause: 0,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    // Display user friendly formatted data
+    displayEntry(displayEntryData);
 
-  // display user friendly formatted data
-  displayEntry(displayEntryData);
+    // Resets timer variable
+    clearInterval(timer);
 
-  // Resets timer variable
-  clearInterval(timer);
+    // Reset timer for user
+    count = 0;
+    output.innerHTML = "00:00:00";
+    pipOut.innerHTML = "00:00:00";
 
-  // Resets frontend timer
-  count = 0;
-  output.innerHTML = "00:00:00";
-  timer = null;
-  playpause.innerHTML =
-    '<span class="material-symbols-outlined">play_arrow</span>';
+    // Set timer start button to Play Symbol
+    playpause.innerHTML =
+      '<span class="material-symbols-outlined">play_arrow</span>';
+    pipPlayPause.innerHTML =
+      '<span class="material-symbols-outlined">play_arrow</span>';
+
+    timer = null;
+
+    name = "";
+    subject = "subject";
+    assignment = "assignment";
+    tag = "tag";
+  } else {
+    alert("Please begin an entry before ending one");
+  }
 }
 
 /**
@@ -208,7 +237,7 @@ function displayEntry(entryDataJson) {
   newEntry.className = "entry-display-slave";
   newEntry.id = name;
 
-  entryDiv.appendChild(newEntry);
+  entryDiv.insertBefore(newEntry, entryDiv.childNodes[0]);
 }
 
 /**
@@ -314,6 +343,10 @@ function clearGeneratedOptions(className) {
   }
 }
 
+/**
+ *
+ * @yields new subject data saved to server-side JSON file
+ */
 function newSubject() {
   let subjectName = document.getElementById("new-subject-name").value;
   let subjectColour = document.getElementById("new-subject-colour").value;
@@ -340,6 +373,10 @@ function newSubject() {
   document.getElementById("subject").value = "subject";
 }
 
+/**
+ *
+ * @yields new tag data saved to server-side JSON file
+ */
 function newTag() {
   let tagName = document.getElementById("new-tag-name").value;
   let tagColour = document.getElementById("new-tag-colour").value;
@@ -368,6 +405,10 @@ function newTag() {
   document.getElementById("tag").value = "tag";
 }
 
+/**
+ *
+ * @yields new assignment data saved to server-side JSON file
+ */
 function newAssignment() {
   let assignmentName = document.getElementById("new-assignment-name").value;
   let assignmentColour = document.getElementById("new-assignment-colour").value;
@@ -396,4 +437,60 @@ function newAssignment() {
   showAssignmentOptions();
 
   document.getElementById("assignment").value = "assignment";
+}
+
+/**
+ *
+ * @returns picture in picture window created
+ */
+async function togglePictureInPicture() {
+  // Early return if there's already a Picture-in-Picture window open.
+  if (window.documentPictureInPicture.window) {
+    return;
+  }
+
+  // Open a Picture-in-Picture window.
+  const pipWindow = await window.documentPictureInPicture.requestWindow({
+    width: 10,
+    height: 12,
+  });
+
+  // Move the timer to the Picture-in-Picture window.
+  document.getElementById("timer-picture-in-picture").style.display = "block";
+  pipWindow.document.body.append(
+    document.getElementById("timer-picture-in-picture")
+  );
+
+  // Set styling for Picture-in-Picture window.
+  const cssLink = document.createElement("link");
+  const materialSymbols = document.createElement("link");
+
+  materialSymbols.rel = "stylesheet";
+  materialSymbols.href =
+    "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0";
+
+  cssLink.rel = "stylesheet";
+  cssLink.href = "/pip-styles";
+
+  pipWindow.document.head.appendChild(cssLink);
+  pipWindow.document.head.appendChild(materialSymbols);
+
+  // Set Picture-in-Picture buttons to control timer
+  pipWindow.document
+    .getElementById("picture-in-picture-play-pause")
+    .addEventListener("click", (event) => {
+      startTimer();
+    });
+  pipWindow.document
+    .getElementById("picture-in-picture-stop")
+    .addEventListener("click", (event) => {
+      stopTimer();
+    });
+
+  pipWindow.addEventListener("unload", (event) => {
+    document.body.append(
+      pipWindow.document.getElementById("timer-picture-in-picture")
+    );
+    document.getElementById("timer-picture-in-picture").style.display = "none";
+  });
 }

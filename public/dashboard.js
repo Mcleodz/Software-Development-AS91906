@@ -36,12 +36,11 @@ function convertSeconds(duration) {
   seconds_display = (duration - minutes * 60 - hours * 3600).toString();
 
   // Check if total time will look ugly with mins and secs
-  if (hours > 100) {
-    output = hours_display + "hrs ";
-  }
   // Check if total time is not 0
-  else if (duration == "") {
+  if (duration == 0) {
     output = "0secs";
+  } else if (hours > 100) {
+    output = hours_display + "hrs";
   }
   // Reformat total time if above conditions are not met
   else {
@@ -51,7 +50,7 @@ function convertSeconds(duration) {
     if (minutes > 0) {
       output += minutes_display + "mins ";
     }
-    if (seconds > 0) {
+    if (seconds > 0 && seconds >= 10) {
       output += seconds_display + "secs ";
     }
   }
@@ -310,24 +309,23 @@ async function generateDashboard(type, subject = "") {
     colourRequestAddress = "/get/subjects/colours";
     leftGraphTitle = "Total time breakdown by subject (%)";
     displayGoalsBool = true;
-  }
-
-  if (type == "assignment") {
+  } else if (type == "assignment") {
     document.title = "Verso - Assignment Dashboard";
-    document.getElementById("header").innerText = "Dashboard - Assignment";
+    document.getElementById("header").innerText = `Dashboard - ${subject}`;
     requestAddress = "/get/assignments/" + subject;
     timeRequestAddress = "/get/times/assignment/" + subject;
     colourRequestAddress = "/get/assignments/colours/" + subject;
     leftGraphTitle = `Total time breakdown by assignment for ${subject} (%)`;
-  }
-
-  if (type == "tag") {
+  } else if (type == "tag") {
     document.title = "Verso - Tag Dashboard";
     document.getElementById("header").innerText = "Dashboard - Tag";
     requestAddress = "/get/tags";
     timeRequestAddress = "/get/times/tag";
     colourRequestAddress = "/get/tags/colours";
     leftGraphTitle = "Total time breakdown by tag (%)";
+  } else {
+    alert("Please select a valid dashboard type to generate");
+    return false;
   }
 
   // Gets list of subjects from server
@@ -653,6 +651,7 @@ async function generateGoalsGraph(ID) {
     "#D5A021": "rgba(213, 160, 33, 0.25)",
     "#d15d24": "rgba(209, 93, 36, 0.25)",
     "#A49694": "rgba(164, 150, 148, 0.25)",
+    "#181716": "rgba(24, 23, 22, 0.25)"
   };
 
   let remainderColours = [];

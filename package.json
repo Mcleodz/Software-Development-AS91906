@@ -1,0 +1,16 @@
+{
+  "name": "software-development-as91906",
+  "version": "1.0.0",
+  "description": "Time management software for students",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Zac McLeod",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^4.4.4",
+    "express": "^4.19.2"
+  }
+}

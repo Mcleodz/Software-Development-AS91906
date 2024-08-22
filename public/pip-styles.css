@@ -1,0 +1,55 @@
+@font-face {
+    font-family: "Montserrat";
+    src: url("/font");
+}
+
+body {
+    background-color: #d9d9d9;
+    margin: 0;
+    padding: 0;
+  
+    overflow-x: hidden;
+}
+
+
+.timer-bar-button {
+    height: 80%;
+    width: 30%;
+  
+    font-size: 1rem;
+    font-family: Montserrat;
+    text-align: center;
+    font-weight: bold;
+  
+    color: #fff;
+  
+    cursor: pointer;
+    background-color: rgba(115, 107, 96, 0.53);
+  
+    border-radius: 1rem;
+    border: none;
+    margin-left: 2%;
+    margin-top: 2%;
+    float: left;
+}
+  
+.timer-bar-out {
+    height: 81%;
+    width: 33%;
+  
+    font-size: 100%;
+    text-align: center;
+    font-family: Montserrat;
+    font-weight: bold;
+  
+    color: #fff;
+    background-color: rgba(115, 107, 96, 0.53);
+    border: none;
+  
+    border-radius: 1rem;
+    margin-left: 2%;
+    margin-top: 2%;
+    padding-left: 1%;
+    padding-right: 1%;
+    float: left;
+}

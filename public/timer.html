@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <link rel="stylesheet" href="/styles"/>
+    <link rel="icon" type="image/x-icon" href="/favicon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
     <script src="/timer/script"></script>
     <title>
@@ -31,6 +32,7 @@
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
             <option value="#A49694" style="background-color: #A49694; color:#EDE7D9;">Grey</option>
+            <option value="#181716" style="background-color: #181716; color:#EDE7D9;">Onyx</option>
         </select>
         <button class="escape" onclick="toggleDiv('new-subject-menu')">x</button>
         <button class="new-option-submission" onclick='newSubject()'>Create Subject</button>
@@ -44,6 +46,7 @@
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
             <option value="#A49694" style="background-color: #A49694; color:#EDE7D9;">Grey</option>
+            <option value="#181716" style="background-color: #181716; color:#EDE7D9;">Onyx</option>
         </select>
         <button class="escape" onclick="toggleDiv('new-assignment-menu')">x</button>
         <button class="new-option-submission" onclick="newAssignment()">Create Assignment</button>
@@ -57,6 +60,7 @@
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
             <option value="#A49694" style="background-color: #A49694; color:#EDE7D9;">Grey</option>
+            <option value="#181716" style="background-color: #181716; color:#EDE7D9;">Onyx</option>
         </select>
         <button class="escape" onclick="toggleDiv('new-tag-menu')">x</button>
         <button class="new-option-submission" onclick="newTag()">Create Tag</button>
@@ -75,10 +79,16 @@
         </select>
         <button class="timer-bar-button" id="play" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
         <button class="timer-bar-button" id="stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>
-        <button class="timer-bar-out" id="out" disabled="true"></button>
+        <button class="timer-bar-out" id="out" onclick="togglePictureInPicture()"></button>
     </div>
     
     <div id="entry-display" class="entry-display-master">
-        <!-- Temporary Entries are Displayed here-->
+        <!-- Entries are Displayed here -->
+    </div>
+
+    <div id="timer-picture-in-picture" class="timer-picture-in-picture" style="display: none;">
+        <button class="timer-bar-button" id="picture-in-picture-play-pause" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
+        <button class="timer-bar-button" id="picture-in-picture-stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>
+        <button class="timer-bar-out" id="picture-in-picture-out" onclick="togglePictureInPicture()">00:00:00</button>
     </div>
 </body>
