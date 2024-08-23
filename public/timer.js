@@ -15,7 +15,7 @@ window.onload = function () {
   // Generate Static Options
   showSubjectOptions();
   showTagOptions();
-  displayPreviousEntries();
+//  displayPreviousEntries();
 
   output.innerHTML = "00:00:00";
   pipOut.innerHTML = "00:00:00";

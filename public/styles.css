@@ -365,8 +365,8 @@ h1 {
 }
 
 .dashboard-slave {
-  height: 8rem;
-  width: 15.75%;
+  height:8rem;
+  min-width: 11%;
 
   color: #fff;
   background-color: #4b4237;

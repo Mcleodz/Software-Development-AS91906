@@ -338,6 +338,8 @@ async function generateDashboard(type, subject = "") {
   const goalsResponse = await fetch("/get/goalsDict");
   const goalsResponseObj = await goalsResponse.json();
 
+  let cardWidth = `${Math.floor(83 / (responseObj.length + 1))}%`;
+
   for (let i = 0; i < responseObj.length; i++) {
     let current = responseObj[i];
 
@@ -356,6 +358,7 @@ async function generateDashboard(type, subject = "") {
     newCard.id = current;
     newCard.className = "dashboard-slave";
     newCard.style.backgroundColor = colourResponseObj[i];
+    newCard.style.width = cardWidth;
 
     // Creates title for current subject card
     let newCardName = document.createElement("p");
@@ -380,6 +383,7 @@ async function generateDashboard(type, subject = "") {
   totalCard.className = "dashboard-slave";
   totalCard.style.backgroundColor = "#EDE7D9";
   totalCard.style.color = "#4B4237";
+  totalCard.style.width = cardWidth;
 
   // Creates title for current subject card
   let totalCardName = document.createElement("p");
