@@ -221,7 +221,7 @@ h1 {
 }
 .new-name {
   height: 3.3rem;
-  width: 31.5rem;
+  width: 47%;
 
   font-size: 1rem;
   font-family: Montserrat;
@@ -242,7 +242,7 @@ h1 {
 
 .new-colour {
   height: 3.3rem;
-  width: 16.5rem;
+  width: 40.5%;
 
   font-size: 1rem;
   font-family: Montserrat;
@@ -263,7 +263,7 @@ h1 {
 
 .escape {
   height: 3.3rem;
-  width: 3.4rem;
+  width: 7.5%;
 
   font-size: 1rem;
   font-family: Montserrat;
@@ -542,7 +542,7 @@ h1 {
 
 .goal-subject-select {
   height: 3.3rem;
-  width: 45%;
+  width: 47%;
 
   font-size: 1rem;
   font-family: Montserrat;
@@ -559,8 +559,6 @@ h1 {
   margin-left: 1%;
   margin-top: 1%;
   float: left;
-
-  box-shadow: none;
 }
 
 .goal-management-submission {
@@ -585,8 +583,8 @@ h1 {
 }
 
 .goal-length-input {
-  height: 3.175rem;
-  width: 44%;
+  height: 3.3rem;
+  width: 40.5%;
 
   font-size: 1rem;
   font-family: Montserrat;

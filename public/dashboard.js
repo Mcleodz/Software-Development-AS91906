@@ -302,6 +302,7 @@ async function generateDashboard(type, subject = "") {
   let colourRequestAddress = "";
 
   if (type == "subject") {
+    // If subject dashboard, use subject specific data for subject dashboard
     document.title = "Verso - Subject Dashboard";
     document.getElementById("header").innerText = "Dashboard - Subject";
     requestAddress = "/get/subjects";
@@ -310,6 +311,7 @@ async function generateDashboard(type, subject = "") {
     leftGraphTitle = "Total time breakdown by subject (%)";
     displayGoalsBool = true;
   } else if (type == "assignment") {
+    // If assignment dashboard, use assignment specific data for assignment dashboard
     document.title = "Verso - Assignment Dashboard";
     document.getElementById("header").innerText = `Dashboard - ${subject}`;
     requestAddress = "/get/assignments/" + subject;
@@ -317,6 +319,7 @@ async function generateDashboard(type, subject = "") {
     colourRequestAddress = "/get/assignments/colours/" + subject;
     leftGraphTitle = `Total time breakdown by assignment for ${subject} (%)`;
   } else if (type == "tag") {
+    // If tag dashboard, use tag specific data for tag dashboard
     document.title = "Verso - Tag Dashboard";
     document.getElementById("header").innerText = "Dashboard - Tag";
     requestAddress = "/get/tags";
@@ -324,6 +327,7 @@ async function generateDashboard(type, subject = "") {
     colourRequestAddress = "/get/tags/colours";
     leftGraphTitle = "Total time breakdown by tag (%)";
   } else {
+    // If invalid dashboard, return error
     alert("Please select a valid dashboard type to generate");
     return false;
   }
@@ -332,12 +336,11 @@ async function generateDashboard(type, subject = "") {
   const response = await fetch(requestAddress);
   const responseObj = await response.json();
 
+  // Get list of dashboard colours
   const colourResponse = await fetch(colourRequestAddress);
   const colourResponseObj = await colourResponse.json();
 
-  const goalsResponse = await fetch("/get/goalsDict");
-  const goalsResponseObj = await goalsResponse.json();
-
+  // Set width of dashboard cards to scale depending on number of cards
   let cardWidth = `${Math.floor(83 / (responseObj.length + 1))}%`;
 
   for (let i = 0; i < responseObj.length; i++) {
@@ -416,6 +419,7 @@ async function generateDashboard(type, subject = "") {
   generateGoalsGraph("graph-right");
 
   if (displayGoalsBool == true) {
+    // If subject dashboard, display goals
     displayGoals();
     toggleDiv("goal-master");
     toggleDiv("goal-options");
@@ -424,13 +428,19 @@ async function generateDashboard(type, subject = "") {
 }
 
 async function displayGoals() {
+  // Get list of goals from server
   const goalsResponse = await fetch("/get/goalsDict");
   const goalsResponseObj = await goalsResponse.json();
 
+  // Get total time for goals from server
   const goalsTotalResponse = await fetch("/get/goalsTotal");
   const goalsTotalResponseObj = await goalsTotalResponse.text();
 
+  // Declare goal div
   const goalMaster = document.getElementById("goal-master");
+
+  // Set width of dashboard cards to scale depending on number of cards
+  let cardWidth = `${Math.floor(83 / (goalsResponseObj.length + 1))}%`;
 
   for (let i = 0; i < goalsResponseObj.length; i++) {
     // Creates Time Card for current subject
@@ -438,6 +448,7 @@ async function displayGoals() {
     newCard.id = `${goalsResponseObj[i].goalSubject} - Goal`;
     newCard.className = "dashboard-slave";
     newCard.style.backgroundColor = goalsResponseObj[i].goalColour;
+    newCard.style.width = cardWidth;
 
     // Creates title for current subject card
     let newCardName = document.createElement("p");
@@ -461,6 +472,7 @@ async function displayGoals() {
   totalCard.className = "dashboard-slave";
   totalCard.style.backgroundColor = "#EDE7D9";
   totalCard.style.color = "#4B4237";
+  totalCard.style.width = cardWidth
 
   // Creates title for current subject card
   let totalCardName = document.createElement("p");
@@ -482,66 +494,78 @@ async function displayGoals() {
   generateGoalsGraph("graph-right");
 }
 
-async function showNewGoalOptions(subjectMasterID) {
+async function showNewGoalOptions(goalOptionMasterID) {
   clearOptions("generated-subject-options");
 
   // Gets list of subjects from server
   const response = await fetch("/get/subjects");
   const responseObj = await response.json();
 
+  // Gets list of goals from server
   const goalsResponse = await fetch("/get/goalsDict");
   const goalsResponseObj = await goalsResponse.json();
 
-  const subjectMaster = document.getElementById(subjectMasterID);
+  // Declares new goal option dropdown
+  const goalOptionMaster = document.getElementById(goalOptionMasterID);
 
+  // Appends each goal subject to goalsList
   let goalsList = [];
   for (let i = 0; i < goalsResponseObj.length; i++) {
     goalsList.push(goalsResponseObj[i].goalSubject);
   }
 
+  // Creates new option for each subject without an existing goal
   for (let i = 0; i < responseObj.length; i++) {
     if (goalsList.includes(responseObj[i]) == false) {
       let newOption = document.createElement("option");
       newOption.value = responseObj[i];
       newOption.innerText = responseObj[i];
       newOption.className = "generated-subject-options";
-      subjectMaster.appendChild(newOption);
+      goalOptionMaster.appendChild(newOption);
     }
   }
 }
 
-async function showGoalOptions(subjectMasterID) {
+async function showGoalOptions(goalOptionMasterID) {
   clearOptions("generated-goal-options");
 
   // Gets list of subjects from server
   const response = await fetch("/get/goalsDict");
   const responseObj = await response.json();
 
-  const subjectMaster = document.getElementById(subjectMasterID);
+  // Declares new goal option dropdown
+  const goalOptionMaster = document.getElementById(goalOptionMasterID);
 
+  // Creates new option for each existing goal
   for (let i = 0; i < responseObj.length; i++) {
     let newOption = document.createElement("option");
     newOption.value = responseObj[i].goalSubject;
     newOption.innerText = responseObj[i].goalSubject;
     newOption.className = "generated-goal-options";
-    subjectMaster.appendChild(newOption);
+    goalOptionMaster.appendChild(newOption);
   }
 }
 
 async function createNewGoal() {
+  // Declaring variables
   let subject = document.getElementById("new-goal-select").value;
   let duration = document.getElementById("new-goal-length").value;
 
+  // Gets list of subjects from server
   const response = await fetch("/get/subjects");
   const responseObj = await response.json();
 
+  // Gets index of user-specified subject
   const index = responseObj.indexOf(subject);
 
+  // Gets list of subject colours
   const colourResponse = await fetch("/get/subjects/colours");
   const colourResponseObj = await colourResponse.json();
 
+  // Sets new goal colour to subject's colour
   let colour = colourResponseObj[index];
 
+  // Makes POST request to server to add goal 
   fetch("/post/newGoal", {
     method: "POST",
     body: JSON.stringify({
@@ -554,28 +578,24 @@ async function createNewGoal() {
     },
   });
 
+  // Un-toggles goal menu
   toggleDiv("new-goal-menu");
+
+  // Re displays updated goals
   clearGoals();
   displayGoals();
 
+  // Clears goal menus
   document.getElementById("new-goal-select").value = "none-selected";
   document.getElementById("new-goal-length").value = "";
 }
 
 async function editGoal() {
+  // Declaring Variables
   let subject = document.getElementById("edit-goal-select").value;
   let duration = document.getElementById("updated-goal-length").value;
 
-  const response = await fetch("/get/subjects");
-  const responseObj = await response.json();
-
-  const index = responseObj.indexOf(subject);
-
-  const colourResponse = await fetch("/get/subjects/colours");
-  const colourResponseObj = await colourResponse.json();
-
-  let colour = colourResponseObj[index];
-
+  // Makes POST request to server to update user-specified goal
   fetch("/post/editGoal", {
     method: "POST",
     body: JSON.stringify({
@@ -587,17 +607,23 @@ async function editGoal() {
     },
   });
 
+  // Un-toggles goal menu
   toggleDiv("edit-goal-menu");
+
+  // Re displays updated goals
   clearGoals();
   displayGoals();
 
+  // Clears goal menus
   document.getElementById("edit-goal-select").value = "none-selected";
   document.getElementById("updated-goal-length").value = "";
 }
 
 function removeGoal() {
+  // Declaring Subject
   let subject = document.getElementById("remove-goal-select").value;
 
+  // Makes POST request to server to remove user-specified goal
   fetch("/post/removeGoal", {
     method: "POST",
     body: JSON.stringify({
@@ -608,48 +634,63 @@ function removeGoal() {
     },
   });
 
-  toggleDiv("remove-goal-menu");
+  // Un-toggles goal menu
+  toggleDiv("new-goal-menu");
+
+  // Re displays updated goals
   clearGoals();
   displayGoals();
 
+  // Clears goal menu
   document.getElementById("remove-goal-select").value = "none-selected";
 }
 
 function clearGoals() {
+  // Declaring variables
   const goalMaster = document.getElementById("goal-master");
-
-  goalMaster.remove();
-
   const body = document.body;
 
+  // Removes goals div
+  goalMaster.remove();
+
+  // Creates new goals div
   let newGoalMaster = document.createElement("div");
   newGoalMaster.id = "goal-master";
   newGoalMaster.className = "goal-master";
 
+  // Appends new goals div to page
   body.appendChild(newGoalMaster);
 }
 
 async function generateGoalsGraph(ID) {
+  // Declaring Graph 
   let graphTitle = document.getElementById(ID + "-title");
   let oldGraph = document.getElementById(ID);
 
+  // Removes old graph
   oldGraph.remove();
 
+  // Creates new canvas for graph
   let graph = document.createElement("canvas");
-  graph.id = "graph-right";
+  graph.id = ID;
 
-  document.getElementById("graph-right-master").appendChild(graph);
+  // Appends new graph to goals Div
+  document.getElementById(ID + "-master").appendChild(graph);
 
   graphTitle.innerText = "Progression towards subject goals (%)";
 
+  // Gets goals data
   const goalsResponse = await fetch("/get/goalsDict");
   const goalsDict = await goalsResponse.json();
 
+  // Declaring Variables
   let times = [];
   let timesDifference = [];
   let goalNames = [];
   let goalColours = [];
+  let remainderColours = [];
 
+  // Declaring Colours for remaining amount of time
   let remainderColourDict = {
     "#8A3324": "rgba(138, 51, 36, 0.25)",
     "#D5A021": "rgba(213, 160, 33, 0.25)",
@@ -658,25 +699,41 @@ async function generateGoalsGraph(ID) {
     "#181716": "rgba(24, 23, 22, 0.25)"
   };
 
-  let remainderColours = [];
-
   for (let i = 0; i < goalsDict.length; i++) {
+    // Adds each goal name, colour, and remainder colour to respective list
     goalNames.push(goalsDict[i].goalSubject);
     goalColours.push(goalsDict[i].goalColour);
     remainderColours.push(remainderColourDict[goalsDict[i].goalColour]);
 
+    // Gets list of subject times from server
     const subjectTimeResponse = await fetch(
       "/get/times/subject/" + goalsDict[i].goalSubject
     );
     const subjectTimeResponseObj = await subjectTimeResponse.text();
 
+    // Gets progression towards subject goals and converts to %
     let fractionalDifference =
       Number(subjectTimeResponseObj) / Number(goalsDict[i].goalDuration);
     let percentageDifference = Math.round(fractionalDifference * 100);
-    times.push(percentageDifference);
-    timesDifference.push(100 - percentageDifference);
+
+    // If goal is accomplished, only display 100% completion
+    if (percentageDifference < 100){
+      times.push(percentageDifference);
+    }
+    else{
+      times.push(100);
+    }
+
+    // If goal is accomplished, do not display remainder
+    if ((100 - percentageDifference) > 0){
+      timesDifference.push(100 - percentageDifference);
+    }
+    else{
+      timesDifference.push(0);
+    }
   }
 
+  // Convert canvas to Chart.js Graph
   new Chart(ID, {
     type: "bar",
     data: {
