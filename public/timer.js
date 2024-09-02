@@ -355,22 +355,33 @@ function newSubject() {
     name: subjectName,
     colour: subjectColour,
   };
+  
+  if (/[a-z]/i.test(subjectName) == false){
+    alert("Please ensure the Subject has a name");
+  }
+  else if(subjectName.length <= 3){
+    alert("Please ensure the Subject has a name");
+  }
+  else if(Number(subjectName)===subjectName){
+    alert("Please ensure the Subject has a name");
+  }
+  else{
+    fetch("/post/newSubject", {
+      method: "POST",
+      body: JSON.stringify(newSubjectData),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  fetch("/post/newSubject", {
-    method: "POST",
-    body: JSON.stringify(newSubjectData),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    subjectName = "";
+    subjectColour = "";
+    toggleDiv("new-subject-menu");
 
-  subjectName = "";
-  subjectColour = "";
-  toggleDiv("new-subject-menu");
+    showSubjectOptions();
 
-  showSubjectOptions();
-
-  document.getElementById("subject").value = "subject";
+    document.getElementById("subject").value = "subject";
+  }
 }
 
 /**
@@ -385,24 +396,33 @@ function newTag() {
     name: tagName,
     colour: tagColour,
   };
+  
+  if (/[a-z]/i.test(tagName) == false){
+    alert("Please ensure the Tag has a name");
+  }
+  else if(tagName.length <= 3){
+    alert("Please ensure the Tag has a name");
+  }
+  else if(Number(tagName) === tagName){
+    alert("Please ensure the Tag has a name");
+  }
+  else{
+    fetch("/post/newTag", {
+      method: "POST",
+      body: JSON.stringify(newTagData),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  console.log(newTagData);
+    tagName = "";
+    tagColour = "";
+    toggleDiv("new-tag-menu");
 
-  fetch("/post/newTag", {
-    method: "POST",
-    body: JSON.stringify(newTagData),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    showTagOptions();
 
-  tagName = "";
-  tagColour = "";
-  toggleDiv("new-tag-menu");
-
-  showTagOptions();
-
-  document.getElementById("tag").value = "tag";
+    document.getElementById("tag").value = "tag";
+  }
 }
 
 /**
@@ -420,23 +440,33 @@ function newAssignment() {
     name: assignmentName,
     colour: assignmentColour,
     subject: subject,
-  };
+  }; 
+  if (/[a-z]/i.test(assignmentName) == false){
+    alert("Please ensure the Assignment has a name");
+  }
+  else if(assignmentName.length <= 3){
+    alert("Please ensure the Assignment has a name");
+  }
+  else if(Number(assignmentName)===assignmentName){
+    alert("Please ensure the Assignment has a name");
+  }
+  else{
+    fetch("/post/newAssignment", {
+      method: "POST",
+      body: JSON.stringify(newAssignmentData),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  fetch("/post/newAssignment", {
-    method: "POST",
-    body: JSON.stringify(newAssignmentData),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    assignmentName = "";
+    assignmentColour = "";
+    toggleDiv("new-assignment-menu");
 
-  assignmentName = "";
-  assignmentColour = "";
-  toggleDiv("new-assignment-menu");
+    showAssignmentOptions();
 
-  showAssignmentOptions();
-
-  document.getElementById("assignment").value = "assignment";
+    document.getElementById("assignment").value = "assignment";
+  }
 }
 
 /**

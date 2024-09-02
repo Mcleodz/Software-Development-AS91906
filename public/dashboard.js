@@ -565,18 +565,29 @@ async function createNewGoal() {
   // Sets new goal colour to subject's colour
   let colour = colourResponseObj[index];
 
-  // Makes POST request to server to add goal 
-  fetch("/post/newGoal", {
-    method: "POST",
-    body: JSON.stringify({
-      subjectName: subject,
-      goalDuration: duration,
-      goalColour: colour,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+  if (subject == "none-selected"){
+    alert("Please choose a subject to set a goal for");
+  }
+  else if(Number(duration) > 360){
+    alert("Goals must be set for less than 360 hours of study");
+  }
+  else if(Number(duration) < 1){
+    alert("Goals must be set for more than an hour of study");
+  }
+  else{
+    // Makes POST request to server to add goal 
+    fetch("/post/newGoal", {
+      method: "POST",
+      body: JSON.stringify({
+        subjectName: subject,
+        goalDuration: duration,
+        goalColour: colour,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+  }
 
   // Un-toggles goal menu
   toggleDiv("new-goal-menu");
@@ -595,54 +606,70 @@ async function editGoal() {
   let subject = document.getElementById("edit-goal-select").value;
   let duration = document.getElementById("updated-goal-length").value;
 
-  // Makes POST request to server to update user-specified goal
-  fetch("/post/editGoal", {
-    method: "POST",
-    body: JSON.stringify({
-      subjectName: subject,
-      goalDuration: duration,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+  if (subject == "none-selected"){
+    alert("Please choose a subject to set a goal for");
+  }
+  else if(Number(duration) > 360){
+    alert("Please enter a goal duration less than 360 hours");
+  }
+  else if(Number(duration) < 1){
+    alert("Goals must be set for more than an hour of study");
+  }
+  else{
+    // Makes POST request to server to update user-specified goal
+    fetch("/post/editGoal", {
+      method: "POST",
+      body: JSON.stringify({
+        subjectName: subject,
+        goalDuration: duration,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  // Un-toggles goal menu
-  toggleDiv("edit-goal-menu");
+    // Un-toggles goal menu
+    toggleDiv("edit-goal-menu");
 
-  // Re displays updated goals
-  clearGoals();
-  displayGoals();
+    // Re displays updated goals
+    clearGoals();
+    displayGoals();
 
-  // Clears goal menus
-  document.getElementById("edit-goal-select").value = "none-selected";
-  document.getElementById("updated-goal-length").value = "";
+    // Clears goal menus
+    document.getElementById("edit-goal-select").value = "none-selected";
+    document.getElementById("updated-goal-length").value = "";
+  }
 }
 
 function removeGoal() {
   // Declaring Subject
   let subject = document.getElementById("remove-goal-select").value;
 
-  // Makes POST request to server to remove user-specified goal
-  fetch("/post/removeGoal", {
-    method: "POST",
-    body: JSON.stringify({
-      subjectName: subject,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+  if (subject == "none-selected"){
+    alert("Please choose a subject to set a goal for");
+  }
+  else{
+    // Makes POST request to server to remove user-specified goal
+    fetch("/post/removeGoal", {
+      method: "POST",
+      body: JSON.stringify({
+        subjectName: subject,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
 
-  // Un-toggles goal menu
-  toggleDiv("new-goal-menu");
+    // Un-toggles goal menu
+    toggleDiv("new-goal-menu");
 
-  // Re displays updated goals
-  clearGoals();
-  displayGoals();
+    // Re displays updated goals
+    clearGoals();
+    displayGoals();
 
-  // Clears goal menu
-  document.getElementById("remove-goal-select").value = "none-selected";
+    // Clears goal menu
+    document.getElementById("remove-goal-select").value = "none-selected";
+  }
 }
 
 function clearGoals() {
