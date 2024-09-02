@@ -565,12 +565,20 @@ async function createNewGoal() {
   // Sets new goal colour to subject's colour
   let colour = colourResponseObj[index];
 
+  // Data validation
+  // Check a goal subject has been selected
   if (subject == "none-selected"){
     alert("Please choose a subject to set a goal for");
   }
+  // Check a set goal is less than 360 hours
+  /*
+    * 360 hours max set as universities recommend 10hrs per point
+    * Each class typically has 15 points but set cap allows for 30 point classes
+  */
   else if(Number(duration) > 360){
     alert("Goals must be set for less than 360 hours of study");
   }
+  // Check goal duration has been set
   else if(Number(duration) < 1){
     alert("Goals must be set for more than an hour of study");
   }
@@ -605,13 +613,21 @@ async function editGoal() {
   // Declaring Variables
   let subject = document.getElementById("edit-goal-select").value;
   let duration = document.getElementById("updated-goal-length").value;
-
+  
+  // Data validation
+  // Check a goal subject has been selected
   if (subject == "none-selected"){
     alert("Please choose a subject to set a goal for");
   }
+  // Check a set goal is less than 360 hours
+  /*
+    * 360 hours max set as universities recommend 10hrs per point
+    * Each class typically has 15 points but set cap allows for 30 point classes
+  */
   else if(Number(duration) > 360){
     alert("Please enter a goal duration less than 360 hours");
   }
+  // Check goal duration has been set
   else if(Number(duration) < 1){
     alert("Goals must be set for more than an hour of study");
   }
@@ -644,7 +660,9 @@ async function editGoal() {
 function removeGoal() {
   // Declaring Subject
   let subject = document.getElementById("remove-goal-select").value;
-
+  
+  // Data validation
+  // Check a goal subject has been selected
   if (subject == "none-selected"){
     alert("Please choose a subject to set a goal for");
   }
