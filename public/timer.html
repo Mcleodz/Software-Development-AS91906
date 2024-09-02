@@ -27,7 +27,7 @@
     <div class="new-option-menu" id="new-subject-menu" style="display: none;">
         <input class="new-name" id="new-subject-name" placeholder="New Subject Name?">
         <select class="new-colour" id="new-subject-colour">
-            <option selected disabled value=""> Subject Colour </option>
+            <option selected disabled value="none-selected"> Subject Colour </option>
             <option value="#8A3324" style="background-color: #8A3324; color:#EDE7D9;">Red</option>
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
@@ -41,7 +41,7 @@
     <div class="new-option-menu" id="new-assignment-menu" style="display: none;">
         <input class="new-name" id="new-assignment-name" placeholder="New Assignment Name?">
         <select class="new-colour" id="new-assignment-colour">
-            <option selected disabled value=""> Assignment Colour </option>
+            <option selected disabled value="none-selected"> Assignment Colour </option>
             <option value="#8A3324" style="background-color: #8A3324; color:#EDE7D9;">Red</option>
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
@@ -55,7 +55,7 @@
     <div class="new-option-menu" id="new-tag-menu" style="display: none;">
         <input class="new-name" id="new-tag-name" placeholder="New Tag Name?">
         <select class="new-colour" id="new-tag-colour">
-            <option selected disabled value=""> Tag Colour </option>
+            <option selected disabled value="none-selected"> Tag Colour </option>
             <option value="#8A3324" style="background-color: #8A3324; color:#EDE7D9;">Red</option>
             <option value="#D5A021" style="background-color: #D5A021; color:#EDE7D9;">Gold</option>
             <option value="#d15d24" style="background-color: #d15d24; color:#EDE7D9;">Orange</option>
@@ -75,7 +75,7 @@
             <option value="assignment">Assignment</option>
         </select>
         <select class="timer-bar-slave" id="tag" tabindex="0" onchange="toggleDiv('new-tag-menu')">
-            <option value="tag">Tag</option>
+            <option value="">Tag</option>
         </select>
         <button class="timer-bar-button" id="play" onclick="startTimer()" tabindex="0"><span class="material-symbols-outlined">play_arrow</span></button>
         <button class="timer-bar-button" id="stop" onclick="stopTimer()" tabindex="0"><span class="material-symbols-outlined">stop</span></button>

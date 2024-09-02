@@ -179,10 +179,10 @@ function stopTimer() {
 
     timer = null;
 
-    name = "";
-    subject = "subject";
-    assignment = "assignment";
-    tag = "tag";
+    document.getElementById("timer").value = "";
+    document.getElementById("subject").value = "subject";
+    document.getElementById("assignment").value = "assignment";
+    document.getElementById("tag").value = "";
   } else {
     alert("Please begin an entry before ending one");
   }
@@ -228,8 +228,13 @@ function displayEntry(entryDataJson) {
   const name = entryData.name;
   const subject = entryData.subject;
   const assignment = entryData.assignment;
-  const tag = entryData.tag;
+  let tag = entryData.tag;
   const length = entryData.duration;
+
+  // Check if tag assigned, if not display tag as "None Assigned"
+  if (tag == "") {
+    tag = "None Assigned";
+  }
 
   // Displays new entry data on timer dashboard
   const entryDiv = document.getElementById("entry-display");
@@ -366,17 +371,16 @@ function newSubject() {
     name: subjectName,
     colour: subjectColour,
   };
-  
+
   // Data Validation
   // Check that subjectName includes any letter in the alphabet
-  if (/[a-z]/i.test(subjectName) == false){
+  if (/[a-z]/i.test(subjectName) == false) {
     alert("Please ensure the Subject has a name");
   }
   // Check that subjectName is longer than three characters
-  else if(subjectName.length <= 3){
+  else if (subjectName.length <= 3) {
     alert("Please ensure the Subject has a name");
-  }
-  else{
+  } else {
     // Send HTTP POST Request to server to add new Subject
     fetch("/post/newSubject", {
       method: "POST",
@@ -387,11 +391,11 @@ function newSubject() {
     });
 
     // Reset Options
-    subjectName = "";
-    subjectColour = "";
     toggleDiv("new-subject-menu");
     showSubjectOptions();
     document.getElementById("subject").value = "subject";
+    document.getElementById("new-subject-name").value = "";
+    document.getElementById("new-subject-colour").value = "none-selected";
   }
 }
 
@@ -409,17 +413,16 @@ function newTag() {
     name: tagName,
     colour: tagColour,
   };
-  
+
   // Data Validation
   // Check that tagName includes any letter in the alphabet
-  if (/[a-z]/i.test(tagName) == false){
+  if (/[a-z]/i.test(tagName) == false) {
     alert("Please ensure the Tag has a name");
   }
   // Check that tagName is longer than three characters
-  else if(tagName.length <= 3){
+  else if (tagName.length <= 3) {
     alert("Please ensure the Tag has a name");
-  }
-  else{
+  } else {
     // Send HTTP POST Request to server to add new Tag
     fetch("/post/newTag", {
       method: "POST",
@@ -430,11 +433,11 @@ function newTag() {
     });
 
     // Rest Options
-    tagName = "";
-    tagColour = "";
     toggleDiv("new-tag-menu");
     showTagOptions();
     document.getElementById("tag").value = "tag";
+    document.getElementById("new-tag-name").value = "";
+    document.getElementById("new-tag-colour").value = "none-selected";
   }
 }
 
@@ -453,18 +456,17 @@ function newAssignment() {
     name: assignmentName,
     colour: assignmentColour,
     subject: subject,
-  }; 
+  };
 
   // Data Validation
   // Check that assignmentName includes any letter in the alphabet
-  if (/[a-z]/i.test(assignmentName) == false){
+  if (/[a-z]/i.test(assignmentName) == false) {
     alert("Please ensure the Assignment has a name");
   }
   // Check that assignmentName is longer than three characters
-  else if(assignmentName.length <= 3){
+  else if (assignmentName.length <= 3) {
     alert("Please ensure the Assignment has a name");
-  }
-  else{
+  } else {
     // Send HTTP POST Request to server to add new assignment
     fetch("/post/newAssignment", {
       method: "POST",
@@ -475,11 +477,11 @@ function newAssignment() {
     });
 
     // Reset Options
-    assignmentName = "";
-    assignmentColour = "";
     toggleDiv("new-assignment-menu");
     showAssignmentOptions();
     document.getElementById("assignment").value = "assignment";
+    document.getElementById("new-assignment-name").value = "";
+    document.getElementById("new-assignment-colour").value = "none-selected";
   }
 }
 

@@ -50,7 +50,7 @@ function convertSeconds(duration) {
     if (minutes > 0) {
       output += minutes_display + "mins ";
     }
-    if (seconds > 0 && seconds >= 10) {
+    if (seconds > 0) {
       output += seconds_display + "secs ";
     }
   }
@@ -472,7 +472,7 @@ async function displayGoals() {
   totalCard.className = "dashboard-slave";
   totalCard.style.backgroundColor = "#EDE7D9";
   totalCard.style.color = "#4B4237";
-  totalCard.style.width = cardWidth
+  totalCard.style.width = cardWidth;
 
   // Creates title for current subject card
   let totalCardName = document.createElement("p");
@@ -567,23 +567,23 @@ async function createNewGoal() {
 
   // Data validation
   // Check a goal subject has been selected
-  if (subject == "none-selected"){
+  if (subject == "none-selected") {
     alert("Please choose a subject to set a goal for");
   }
   // Check a set goal is less than 360 hours
   /*
-    * 360 hours max set as universities recommend 10hrs per point
-    * Each class typically has 15 points but set cap allows for 30 point classes
-  */
-  else if(Number(duration) > 360){
+   * 360 hours max set as universities recommend 10hrs per point
+   * Each class typically has 15 points, set cap allows for 30 and 20
+   * point classes with room for a little extra study
+   */
+  else if (Number(duration) > 360) {
     alert("Goals must be set for less than 360 hours of study");
   }
   // Check goal duration has been set
-  else if(Number(duration) < 1){
+  else if (Number(duration) < 1) {
     alert("Goals must be set for more than an hour of study");
-  }
-  else{
-    // Makes POST request to server to add goal 
+  } else {
+    // Makes POST request to server to add goal
     fetch("/post/newGoal", {
       method: "POST",
       body: JSON.stringify({
@@ -595,43 +595,42 @@ async function createNewGoal() {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
+
+    // Un-toggles goal menu
+    toggleDiv("new-goal-menu");
+
+    // Re displays updated goals
+    clearGoals();
+    displayGoals();
+
+    // Clears goal menus
+    document.getElementById("new-goal-select").value = "none-selected";
+    document.getElementById("new-goal-length").value = "";
   }
-
-  // Un-toggles goal menu
-  toggleDiv("new-goal-menu");
-
-  // Re displays updated goals
-  clearGoals();
-  displayGoals();
-
-  // Clears goal menus
-  document.getElementById("new-goal-select").value = "none-selected";
-  document.getElementById("new-goal-length").value = "";
 }
 
 async function editGoal() {
   // Declaring Variables
   let subject = document.getElementById("edit-goal-select").value;
   let duration = document.getElementById("updated-goal-length").value;
-  
+
   // Data validation
   // Check a goal subject has been selected
-  if (subject == "none-selected"){
+  if (subject == "none-selected") {
     alert("Please choose a subject to set a goal for");
   }
   // Check a set goal is less than 360 hours
   /*
-    * 360 hours max set as universities recommend 10hrs per point
-    * Each class typically has 15 points but set cap allows for 30 point classes
-  */
-  else if(Number(duration) > 360){
+   * 360 hours max set as universities recommend 10hrs per point
+   * Each class typically has 15 points but set cap allows for 30 point classes
+   */
+  else if (Number(duration) > 360) {
     alert("Please enter a goal duration less than 360 hours");
   }
   // Check goal duration has been set
-  else if(Number(duration) < 1){
+  else if (Number(duration) < 1) {
     alert("Goals must be set for more than an hour of study");
-  }
-  else{
+  } else {
     // Makes POST request to server to update user-specified goal
     fetch("/post/editGoal", {
       method: "POST",
@@ -660,13 +659,12 @@ async function editGoal() {
 function removeGoal() {
   // Declaring Subject
   let subject = document.getElementById("remove-goal-select").value;
-  
+
   // Data validation
   // Check a goal subject has been selected
-  if (subject == "none-selected"){
+  if (subject == "none-selected") {
     alert("Please choose a subject to set a goal for");
-  }
-  else{
+  } else {
     // Makes POST request to server to remove user-specified goal
     fetch("/post/removeGoal", {
       method: "POST",
@@ -679,7 +677,7 @@ function removeGoal() {
     });
 
     // Un-toggles goal menu
-    toggleDiv("new-goal-menu");
+    toggleDiv("remove-goal-menu");
 
     // Re displays updated goals
     clearGoals();
@@ -708,7 +706,7 @@ function clearGoals() {
 }
 
 async function generateGoalsGraph(ID) {
-  // Declaring Graph 
+  // Declaring Graph
   let graphTitle = document.getElementById(ID + "-title");
   let oldGraph = document.getElementById(ID);
 
@@ -741,7 +739,7 @@ async function generateGoalsGraph(ID) {
     "#D5A021": "rgba(213, 160, 33, 0.25)",
     "#d15d24": "rgba(209, 93, 36, 0.25)",
     "#A49694": "rgba(164, 150, 148, 0.25)",
-    "#181716": "rgba(24, 23, 22, 0.25)"
+    "#181716": "rgba(24, 23, 22, 0.25)",
   };
 
   for (let i = 0; i < goalsDict.length; i++) {
@@ -762,18 +760,16 @@ async function generateGoalsGraph(ID) {
     let percentageDifference = Math.round(fractionalDifference * 100);
 
     // If goal is accomplished, only display 100% completion
-    if (percentageDifference < 100){
+    if (percentageDifference < 100) {
       times.push(percentageDifference);
-    }
-    else{
+    } else {
       times.push(100);
     }
 
     // If goal is accomplished, do not display remainder
-    if ((100 - percentageDifference) > 0){
+    if (100 - percentageDifference > 0) {
       timesDifference.push(100 - percentageDifference);
-    }
-    else{
+    } else {
       timesDifference.push(0);
     }
   }
